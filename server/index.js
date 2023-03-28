@@ -95,8 +95,8 @@ app.get("/api/soil/:S_id", (req, res) => {
 
 app.put("/api/updatesoil/:S_id", (req, res) => {
     const { S_id } = req.params;
-    const { Location_name, Latitude, Longitude, Bulk_density, Particle_density, Void_ratio, Total_porosity, Moisture_content, Water_holding_capacity, Soil_texture, Soil_color, Soil_pH, Nitrogen, Phosphorus, Potassium, Cation_exchange_capacity } = req.body;
-    const sqlUpdate = "UPDATE soil_location SET Location_name = ?, Latitude = ?, Longitude = ? WHERE S_id = ?; UPDATE physical_properties SET Bulk_density = ?, Particle_density = ?, Void_ratio = ?, Total_porosity = ?, Moisture_content = ?, Water_holding_capacity = ?, Soil_texture = ?, Soil_color = ? WHERE S_id = ?; UPDATE chemical_properties SET Soil_pH = ?, Nitrogen = ?, Phosphorus = ?, Potassium = ?, Cation_exchange_capacity = ? WHERE S_id = ?;";
+    const { Location_name, Latitude, Longitude, Bulk_density, Particle_density, Void_ratio, Total_porosity, Moisture_content, Water_holding_capacity, Soil_texture, Soil_color, Soil_pH, Nitrogen, Phosphorus, Potassium, Cation_exchange_capacity} = req.body;
+    const sqlUpdate = "UPDATE soil_location s, physical_properties p, chemical_properties c SET s.Location_name = ?, s.Latitude = ?, s.Longitude = ?, p.Bulk_density = ?, p.Particle_density = ?, p.Void_ratio = ?, p.Total_porosity = ?, p.Moisture_content = ?, p.Water_holding_capacity = ?, p.Soil_texture = ?, p.Soil_color = ?, c.Soil_pH = ?, c.Nitrogen = ?, c.Phosphorus = ?, c.Potassium = ?, c.Cation_exchange_capacity = ? WHERE s.S_id = ? AND s.S_id = p.S_id AND s.S_id = c.S_id";
     db.query(sqlUpdate, [Location_name, Latitude, Longitude, Bulk_density, Particle_density, Void_ratio, Total_porosity, Moisture_content, Water_holding_capacity, Soil_texture, Soil_color, Soil_pH, Nitrogen, Phosphorus, Potassium, Cation_exchange_capacity, S_id], (error, result) => {
         if (error) {
             console.log(error);
