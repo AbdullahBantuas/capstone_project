@@ -2,6 +2,8 @@
   "dependencies": {
     "dotenv": "^16.0.3",
     "google-map-react": "^2.2.0",
-    "google-maps-react": "^2.0.6"
+    "google-maps-react": "^2.0.6",
+    "react-social-login-buttons": "^3.6.1",
+    "react-to-print": "^2.14.12"
   }
 }

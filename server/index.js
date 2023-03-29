@@ -8,7 +8,7 @@ const db = mysql.createPool({
     host: "localhost",
     user: "root",
     password: "Sc@nner1011",
-    database: "capstone"
+    database: "capstone_project"
 });
 
 app.use(cors());
@@ -72,10 +72,40 @@ app.get("/api/soil", (req, res) => {
     });
 });
 
+// app.post("/api/addsoil", (req, res) => {
+//     const { Location_name, Latitude, Longitude, Bulk_density, Particle_density, Void_ratio, Total_porosity, Moisture_content, Water_holding_capacity, Soil_texture, Soil_color, Soil_pH, Nitrogen, Phosphorus, Potassium, Cation_exchange_capacity } = req.body;
+//     const sqlInsert = "INSERT INTO soil_location (Location_name, Latitude, Longitude) VALUES (?, ?, ?); INSERT INTO physical_properties (Bulk_density, Particle_density, Void_ratio, Total_porosity, Moisture_content, Water_holding_capacity, Soil_texture, Soil_color) VALUES (?, ?, ?, ?, ?, ?, ?, ?); INSERT INTO chemical_properties (Soil_pH, Nitrogen, Phosphorus, Potassium, Cation_exchange_capacity) VALUES (?, ?, ?, ?, ?);";
+//     db.query(sqlInsert, [Location_name, Latitude, Longitude, Bulk_density, Particle_density, Void_ratio, Total_porosity, Moisture_content, Water_holding_capacity, Soil_texture, Soil_color, Soil_pH, Nitrogen, Phosphorus, Potassium, Cation_exchange_capacity], (error, result) => {
+//         if (error) {
+//             console.log(error);
+//         }
+//     });
+// });
+
 app.post("/api/addsoil", (req, res) => {
-    const { Location_name, Latitude, Longitude, Bulk_density, Particle_density, Void_ratio, Total_porosity, Moisture_content, Water_holding_capacity, Soil_texture, Soil_color, Soil_pH, Nitrogen, Phosphorus, Potassium, Cation_exchange_capacity } = req.body;
-    const sqlInsert = "INSERT INTO soil_location (Location_name, Latitude, Longitude) VALUES (?, ?, ?); INSERT INTO physical_properties (Bulk_density, Particle_density, Void_ratio, Total_porosity, Moisture_content, Water_holding_capacity, Soil_texture, Soil_color) VALUES (?, ?, ?, ?, ?, ?, ?, ?); INSERT INTO chemical_properties (Soil_pH, Nitrogen, Phosphorus, Potassium, Cation_exchange_capacity) VALUES (?, ?, ?, ?, ?);";
-    db.query(sqlInsert, [Location_name, Latitude, Longitude, Bulk_density, Particle_density, Void_ratio, Total_porosity, Moisture_content, Water_holding_capacity, Soil_texture, Soil_color, Soil_pH, Nitrogen, Phosphorus, Potassium, Cation_exchange_capacity], (error, result) => {
+    const { Location_name, Latitude, Longitude } = req.body;
+    const sqlInsert = "INSERT INTO soil_location (Location_name, Latitude, Longitude) VALUES (?, ?, ?);";
+    db.query(sqlInsert, [Location_name, Latitude, Longitude], (error, result) => {
+        if (error) {
+            console.log(error);
+        }
+    });
+});
+
+app.post("/api/addsoil2", (req, res) => {
+    const { Bulk_density, Particle_density, Void_ratio, Total_porosity, Moisture_content, Water_holding_capacity, Soil_texture, Soil_color } = req.body;
+    const sqlInsert = "INSERT INTO physical_properties (Bulk_density, Particle_density, Void_ratio, Total_porosity, Moisture_content, Water_holding_capacity, Soil_texture, Soil_color) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+    db.query(sqlInsert, [Bulk_density, Particle_density, Void_ratio, Total_porosity, Moisture_content, Water_holding_capacity, Soil_texture, Soil_color], (error, result) => {
+        if (error) {
+            console.log(error);
+        }
+    });
+});
+
+app.post("/api/addsoil3", (req, res) => {
+    const { Soil_pH, Nitrogen, Phosphorus, Potassium, Cation_exchange_capacity } = req.body;
+    const sqlInsert = "INSERT INTO chemical_properties (Soil_pH, Nitrogen, Phosphorus, Potassium, Cation_exchange_capacity) VALUES (?, ?, ?, ?, ?);";
+    db.query(sqlInsert, [Soil_pH, Nitrogen, Phosphorus, Potassium, Cation_exchange_capacity], (error, result) => {
         if (error) {
             console.log(error);
         }
@@ -95,8 +125,8 @@ app.get("/api/soil/:S_id", (req, res) => {
 
 app.put("/api/updatesoil/:S_id", (req, res) => {
     const { S_id } = req.params;
-    const { Location_name, Latitude, Longitude, Bulk_density, Particle_density, Void_ratio, Total_porosity, Moisture_content, Water_holding_capacity, Soil_texture, Soil_color, Soil_pH, Nitrogen, Phosphorus, Potassium, Cation_exchange_capacity} = req.body;
-    const sqlUpdate = "UPDATE soil_location s, physical_properties p, chemical_properties c SET s.Location_name = ?, s.Latitude = ?, s.Longitude = ?, p.Bulk_density = ?, p.Particle_density = ?, p.Void_ratio = ?, p.Total_porosity = ?, p.Moisture_content = ?, p.Water_holding_capacity = ?, p.Soil_texture = ?, p.Soil_color = ?, c.Soil_pH = ?, c.Nitrogen = ?, c.Phosphorus = ?, c.Potassium = ?, c.Cation_exchange_capacity = ? WHERE s.S_id = ? AND s.S_id = p.S_id AND s.S_id = c.S_id";
+    const { Location_name, Latitude, Longitude, Bulk_density, Particle_density, Void_ratio, Total_porosity, Moisture_content, Water_holding_capacity, Soil_texture, Soil_color, Soil_pH, Nitrogen, Phosphorus, Potassium, Cation_exchange_capacity } = req.body;
+    const sqlUpdate = "UPDATE soil_location s, physical_properties p, chemical_properties c SET s.Location_name = ?, s.Latitude = ?, s.Longitude = ?, p.Bulk_density = ?, p.Particle_density = ?, p.Void_ratio = ?, p.Total_porosity = ?, p.Moisture_content = ?, p.Water_holding_capacity = ?, p.Soil_texture = ?, p.Soil_color = ?, c.Soil_pH = ?, c.Nitrogen = ?, c.Phosphorus = ?, c.Potassium = ?, c.Cation_exchange_capacity = ? WHERE s.S_id = p.S_id AND s.S_id = c.S_id AND s.S_id = ?";
     db.query(sqlUpdate, [Location_name, Latitude, Longitude, Bulk_density, Particle_density, Void_ratio, Total_porosity, Moisture_content, Water_holding_capacity, Soil_texture, Soil_color, Soil_pH, Nitrogen, Phosphorus, Potassium, Cation_exchange_capacity, S_id], (error, result) => {
         if (error) {
             console.log(error);

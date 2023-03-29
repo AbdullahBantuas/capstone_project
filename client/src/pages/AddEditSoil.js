@@ -38,14 +38,16 @@ const AddEditSoil = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if(!Location_name || !Latitude || !Longitude || !Bulk_density || !Particle_density || !Void_ratio, Total_porosity || !Moisture_content || !Water_holding_capacity || !Soil_texture || !Soil_color || !Soil_pH || !Nitrogen || !Phosphorus || !Potassium || !Cation_exchange_capacity) {
+        if(!Location_name || !Latitude || !Longitude || !Bulk_density || !Particle_density || !Void_ratio, !Total_porosity || !Moisture_content || !Water_holding_capacity || !Soil_texture || !Soil_color || !Soil_pH || !Nitrogen || !Phosphorus || !Potassium || !Cation_exchange_capacity) {
             toast.error("Please provide value into each input field");
         } else {
             if(!id) {
-                axios.post("http://localhost:5000/api/addsoil", {
+                axios.post(`http://localhost:5000/api/addsoil`, {
                     Location_name, 
                     Latitude, 
-                    Longitude,
+                    Longitude
+                })
+                axios.post(`http://localhost:5000/api/addsoil2`, {
                     Bulk_density, 
                     Particle_density, 
                     Void_ratio, 
@@ -53,7 +55,9 @@ const AddEditSoil = () => {
                     Moisture_content, 
                     Water_holding_capacity, 
                     Soil_texture, 
-                    Soil_color, 
+                    Soil_color
+                })
+                axios.post(`http://localhost:5000/api/addsoil3`, { 
                     Soil_pH, 
                     Nitrogen, 
                     Phosphorus, 
