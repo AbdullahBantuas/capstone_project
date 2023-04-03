@@ -135,6 +135,43 @@ app.put("/api/updatesoil/:S_id", (req, res) => {
     });
 });
 
+app.delete("/api/removeSoil/:S_id", (req, res) => {
+    const { S_id } = req.params;
+    const sqlRemove = "DELETE FROM soil_location WHERE S_id = ?";
+    db.query(sqlRemove, S_id, (error, result) => {
+        if (error) {
+            console.log(error);
+        }
+    });
+});
+
+app.delete("/api/removeSoil2/:S_id", (req, res) => {
+    const { S_id } = req.params;
+    const sqlRemove = "DELETE FROM physical_properties WHERE S_id = ?";
+    db.query(sqlRemove, S_id, (error, result) => {
+        if (error) {
+            console.log(error);
+        }
+    });
+});
+
+app.delete("/api/removeSoil3/:S_id", (req, res) => {
+    const { S_id } = req.params;
+    const sqlRemove = "DELETE FROM chemical_properties WHERE S_id = ?";
+    db.query(sqlRemove, S_id, (error, result) => {
+        if (error) {
+            console.log(error);
+        }
+    });
+});
+
+app.get("/api/getLocation", (req, res) => {
+    const sqlGet = "SELECT * FROM soil_location";
+    db.query(sqlGet, (error, result) => {
+        res.send(result);
+    });
+});
+
 app.listen(5000, () => {
     console.log("Server is running on port 5000");
 })
