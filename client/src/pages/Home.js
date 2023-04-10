@@ -188,9 +188,9 @@ const MapComponent = () => {
     setClickedMarker(marker);
   };
 
-  const markerDragEnd = (event, index) => {
-    console.log(event.target.getLatLng().lat, event.target.getLatLng().lng);
-  };
+  // const markerDragEnd = (event, index) => {
+  //   console.log(event.target.getLatLng().lat, event.target.getLatLng().lng);
+  // };
 
   return (
     <MapContainer
@@ -214,7 +214,7 @@ const MapComponent = () => {
          location_name={marker.location_name}
          s_id={marker.s_id}
          onMarkerClick={(event) => markerClicked(marker, index)}
-         onDragEnd={(event) => markerDragEnd(event, index)}
+        // onDragEnd={(event) => markerDragEnd(event, index)}
         />
         ) : null
     ))}
@@ -232,17 +232,17 @@ const MapContent = ({ onClick }) => {
 const MarkerContent = ({ position, draggable, onMarkerClick, onDragEnd, index, location_name, s_id }) => {
     const markerRef = useRef();
   
-    const handleDragEnd = (event) => {
-      onDragEnd(event, index);
-    };
+    // const handleDragEnd = (event) => {
+    //   onDragEnd(event, index);
+    // };
   
     return (
         <Marker
           position={position}
-          draggable={draggable}
+          //draggable={draggable}
           eventHandlers={{
             click: (event) => onMarkerClick(event),
-            dragend: handleDragEnd,
+            //dragend: handleDragEnd,
           }}
           ref={markerRef}
         >

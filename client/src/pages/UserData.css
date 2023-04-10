@@ -60,3 +60,8 @@
     background-color: #e82764;
     margin-bottom: 10px;
 }
+
+.search-container {
+    justify-content: center;
+    display: grid;
+}

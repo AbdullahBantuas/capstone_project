@@ -6,6 +6,7 @@ import axios from "axios";
 
 function SoilData() {
   const [data, setData] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const loadData = async () => {
     const response = await axios.get("http://localhost:5000/api/soil");
@@ -25,9 +26,26 @@ function SoilData() {
       setTimeout(() => loadData(), 500);
     }
   };
+
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const filteredData = data.filter((item) => {
+    return item.Location_name.toLowerCase().includes(searchTerm.toLowerCase());
+  });
+
   return (
     <div className="soildata" style={{ marginTop: "100px" }}>
       <ToastContainer position="center" />
+      <div className="search-container">
+        <input
+          type="text"
+          placeholder="Search by Location"
+          value={searchTerm}
+          onChange={handleSearch}
+        />
+      </div>
       <table className="styled-table">
         <thead>
           <tr>
@@ -39,7 +57,7 @@ function SoilData() {
           </tr>
         </thead>
         <tbody>
-          {data.map((item, index) => {
+          {filteredData.map((item, index) => {
             return (
               <tr key={item.S_id}>
                 <th scope="row">{index + 1}</th>

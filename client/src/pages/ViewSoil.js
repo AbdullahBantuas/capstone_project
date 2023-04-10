@@ -1,19 +1,21 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import "./View.css";
+import ReactToPrint from 'react-to-print';
 
 const ViewSoil = () => {    
     const [user, setUser] = useState({});
-
-    const {id} = useParams();
+    const { id } = useParams();
+    const componentRef = useRef(); 
 
     useEffect(() => {
         axios.get(`http://localhost:5000/api/soil/${id}`).then((resp) => setUser({...resp.data[0]}))
     }, [id]);
+
     return (
         <div style={{marginTop: "100px"}}>
-            <div className="card">
+            <div className="card" ref={componentRef}>
                 <div className="card-header">  
                     <p>Soil Information</p>
                 </div>
@@ -91,6 +93,10 @@ const ViewSoil = () => {
                     </Link>
                 </div>
             </div>
+            <ReactToPrint
+                trigger={() => <button onClick={() => window.print()}>Print</button>}
+                content={() => componentRef.current}
+            />
         </div>
     )
 }

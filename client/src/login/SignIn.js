@@ -1,94 +1,94 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
-  FacebookLoginButton,
-  InstagramLoginButton
-} from "react-social-login-buttons";
+  Avatar,
+  Box,
+  Button,
+  Checkbox,
+  Container,
+  CssBaseline,
+  FormControlLabel,
+  Grid,
+  Link,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { LockOutlined } from "@mui/icons-material";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-class SignIn extends Component {
-  constructor() {
-    super();
+const theme = createTheme();
 
-    this.state = {
-      email: "",
-      password: ""
-    };
+export default function SignIn() {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  handleChange(event) {
-    let target = event.target;
-    let value = target.type === "checkbox" ? target.checked : target.value;
-    let name = target.name;
-
-    this.setState({
-      [name]: value
-    });
-  }
-
-  handleSubmit(event) {
+  const handleSubmit = (event) => {
     event.preventDefault();
+    console.log(`Username: ${username}, Password: ${password}`);
+    if (username === "username" && password === "password") {
+      setTimeout(() => navigate("/home"), 500);
+    }
+  };
 
-    console.log("The form was submitted with the following data:");
-    console.log(this.state);
-  }
-
-  render() {
-    return (
-      <div className="formCenter">
-        <form className="formFields" onSubmit={this.handleSubmit}>
-          <div className="formField">
-            <label className="formFieldLabel" htmlFor="email">
-              E-Mail Address
-            </label>
-            <input
-              type="email"
-              id="email"
-              className="formFieldInput"
-              placeholder="Enter your email"
-              name="email"
-              value={this.state.email}
-              onChange={this.handleChange}
+  return (
+    <ThemeProvider theme={theme}>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Box sx={{ marginTop: 8, display: "flex", flexDirection: "column", alignItems: "center" }}>
+          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+            <LockOutlined />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign in
+          </Typography>
+          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="username"
+              label="Username"
+              name="username"
+              autoComplete="username"
+              autoFocus
+              value={username}
+              onChange={(event) => setUsername(event.target.value)}
             />
-          </div>
-
-          <div className="formField">
-            <label className="formFieldLabel" htmlFor="password">
-              Password
-            </label>
-            <input
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
               type="password"
               id="password"
-              className="formFieldInput"
-              placeholder="Enter your password"
-              name="password"
-              value={this.state.password}
-              onChange={this.handleChange}
+              autoComplete="current-password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
             />
-          </div>
-
-          <div className="formField">
-            <button className="formFieldButton">Sign In</button>{" "}
-            <Link to="/" className="formFieldLink">
-              Create an account
-            </Link>
-          </div>
-
-          <div className="socialMediaButtons">
-            <div className="facebookButton">
-              <FacebookLoginButton onClick={() => alert("Hello")} />
-            </div>
-
-            <div className="instagramButton">
-              <InstagramLoginButton onClick={() => alert("Hello")} />
-            </div>
-          </div>
-        </form>
-      </div>
-    );
-  }
+            <FormControlLabel
+              control={<Checkbox value="remember" color="primary" />}
+              label="Remember me"
+            />
+            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+              Sign In
+            </Button>
+            <Grid container justifyContent="space-between">
+              <Grid item>
+                <Link href="#" variant="body2">
+                  Forgot password?
+                </Link>
+              </Grid>
+              <Grid item>
+                <Link href="#" variant="body2">
+                  Don't have an account? Sign Up
+                </Link>
+              </Grid>
+            </Grid>
+          </Box>
+        </Box>
+      </Container>
+    </ThemeProvider>
+  );
 }
-
-export default SignIn;
