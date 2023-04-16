@@ -48,44 +48,68 @@ const ViewSoil = () => {
                     <span>{user.Void_ratio}</span>
                     <br />
                     <br />
-                    <strong>Total porosity: </strong>
-                    <span>{user.Total_porosity}</span>
+                    <strong>Porosity: </strong>
+                    <span>{user.Porosity}</span>
                     <br />
                     <br />
-                    <strong>Moisture content: </strong>
-                    <span>{user.Moisture_content}</span>
+                    <strong>Moisture content(mass): </strong>
+                    <span>{user.Moisture_content_mass}</span>
+                    <br />
+                    <br />
+                    <strong>Moisture content(volume): </strong>
+                    <span>{user.Moisture_content_volume}</span>
                     <br />
                     <br />
                     <strong>Water holding capacity: </strong>
                     <span>{user.Water_holding_capacity}</span>
                     <br />
                     <br />
-                    <strong>Soil texture: </strong>
-                    <span>{user.Soil_texture}</span>
+                    <strong>Clay: </strong>
+                    <span>{user.Clay}</span>
                     <br />
                     <br />
-                    <strong>Soil color: </strong>
-                    <span>{user.Soil_color}</span>
+                    <strong>Silt: </strong>
+                    <span>{user.Silt}</span>
+                    <br />
+                    <br />
+                    <strong>Sand: </strong>
+                    <span>{user.Sand}</span>
                     <br />
                     <br />
                     <strong>Soil pH: </strong>
                     <span>{user.Soil_pH}</span>
                     <br />
                     <br />
-                    <strong>Nitrogen: </strong>
-                    <span>{user.Nitrogen}</span>
+                    <strong>Total nitrogen: </strong>
+                    <span>{user.Total_nitrogen}</span>
                     <br />
                     <br />
-                    <strong>Phosphorus: </strong>
-                    <span>{user.Phosphorus}</span>
+                    <strong>Extractable phosphorus: </strong>
+                    <span>{user.Extractable_phosphorus}</span>
                     <br />
                     <br />
-                    <strong>Potassium: </strong>
-                    <span>{user.Potassium}</span>
+                    <strong>Exchangeable potassium: </strong>
+                    <span>{user.Exchangeable_potassium}</span>
                     <br />
                     <br />
                     <strong>Cation exchange capacity: </strong>
                     <span>{user.Cation_exchange_capacity}</span>
+                    <br />
+                    <br />
+                    <strong>Organic matter: </strong>
+                    <span>{user.Organic_matter}</span>
+                    <br />
+                    <br />
+                    <strong>Earthworm density: </strong>
+                    <span>{user.Earthworm_density}</span>
+                    <br />
+                    <br />
+                    <strong>SQI: </strong>
+                    <span>{user.SQI}</span>
+                    <br />
+                    <br />
+                    <strong>Description: </strong>
+                    <span>{user.Description}</span>
                     <br />
                     <br />
                     <Link to="/soildata">

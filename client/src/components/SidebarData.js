@@ -11,6 +11,12 @@ export const SidebarData = [
     cName: 'nav-text'
   },
   {
+    title: 'Geomap',
+    path: '/geomap',
+    icon: <AiIcons.AiFillHome />,
+    cName: 'nav-text'
+  },
+  {
     title: 'Soil Data',
     path: '/soildata',
     icon: <IoIcons.IoIosPaper />,
@@ -19,6 +25,12 @@ export const SidebarData = [
   {
     title: 'User Data',
     path: '/userdata',
+    icon: <FaIcons.FaCartPlus />,
+    cName: 'nav-text'
+  },
+  {
+    title: 'Researchers',
+    path: '/researchers',
     icon: <FaIcons.FaCartPlus />,
     cName: 'nav-text'
   }

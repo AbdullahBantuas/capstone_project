@@ -10,6 +10,7 @@ import AddEditSoil from './pages/AddEditSoil';
 import View from './pages/View';
 import ViewSoil from './pages/ViewSoil';
 import SignIn from './login/SignIn';
+import Geomap from './pages/Geomap'
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
       <Routes>
         <Route path="/" element={<SignIn />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/geomap" element={<Geomap />} />
         <Route path="/soildata" element={<SoilData />} />
         <Route path="/userdata" element={<UserData />} />
         <Route path="/addContact" element={<AddEdit />} />

@@ -19,7 +19,6 @@ function SoilData() {
 
   const deleteContact = (S_id) => {
     if (window.confirm("Are you sure that you want to delete that content?")) {
-      axios.delete(`http://localhost:5000/api/removeSoil3/${S_id}`);
       axios.delete(`http://localhost:5000/api/removeSoil2/${S_id}`);
       axios.delete(`http://localhost:5000/api/removeSoil/${S_id}`);
       toast.success("contact deleted successfully");
@@ -51,19 +50,17 @@ function SoilData() {
           <tr>
             <th style={{ textAlign: "center" }}>No.</th>
             <th style={{ textAlign: "center" }}>Location</th>
-            <th style={{ textAlign: "center" }}>Latitude</th>
-            <th style={{ textAlign: "center" }}>Longitude</th>
+            <th style={{ textAlign: "center" }}>Soil quality index</th>
             <th style={{ textAlign: "center" }}>Action</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody style={{ overflow: "auto", height: "100px" }}>
           {filteredData.map((item, index) => {
             return (
               <tr key={item.S_id}>
                 <th scope="row">{index + 1}</th>
                 <td>{item.Location_name}</td>
-                <td>{item.Latitude}</td>
-                <td>{item.Longitude}</td>
+                <td>{item.SQI}</td>
                 <td>
                   <Link to={`/updateSoil/${item.S_id}`}>
                     <button className="btn btn-edit">Edit</button>

@@ -1,21 +1,24 @@
 .styled-table {
     border-collapse: collapse;
-    margin: auto;
+    margin: -70px auto;
     font-size: 0.9em;
     font-family: sans-serif;
-    max-width: 800px;
+    min-width: 80%;
+    overflow: hidden;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 }
 
 .styled-table thead tr {
     background-color: #009879;
     color: #ffffff;
-    text-align: left;
+    text-align: center;
 }
 
 .styled-table th,
 .styled-table td {
-    padding: 12px 15px;
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
 }
 
 .styled-table tbody tr {
@@ -63,5 +66,9 @@
 
 .search-container {
     justify-content: center;
+    position: absolute;
+    top: 20px;
+    left: 1020px;
     display: grid;
+    margin: auto;
 }

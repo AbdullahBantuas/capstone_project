@@ -5,7 +5,7 @@ import axios from "axios";
 import {toast} from "react-toastify";
 
 const initialState = {
-    username: "",
+    Username: "",
     Password: "",
     Fullname: "",
     Email: "",
@@ -14,7 +14,7 @@ const initialState = {
 const AddEdit = () => {
     const [state, setState] = useState(initialState);
 
-    const {username, Password, Fullname, Email} = state;
+    const {Username, Password, Fullname, Email} = state;
 
     const navigate = useNavigate();
 
@@ -26,30 +26,30 @@ const AddEdit = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if(!username || !Password || !Fullname || !Email) {
+        if(!Username || !Password || !Fullname || !Email) {
             toast.error("Please provide value into each input field");
         } else {
             if(!id) {
                 axios.post("http://localhost:5000/api/post", {
-                    username,
+                    Username,
                     Password,
                     Fullname,
                     Email
                 })
                 .then(() => {
-                    setState({username: "", Password: "", Fullname: "", Email: ""});
+                    setState({Username: "", Password: "", Fullname: "", Email: ""});
                 })
                 .catch((err) => toast.error(err.response.data));
                 toast.success("Data Added Successfully")
             } else {
                 axios.put(`http://localhost:5000/api/update/${id}`, {
-                    username,
+                    Username,
                     Password,
                     Fullname,
                     Email
                 })
                 .then(() => {
-                    setState({username: "", Password: "", Fullname: "", Email: ""});
+                    setState({Username: "", Password: "", Fullname: "", Email: ""});
                 })
                 .catch((err) => toast.error(err.response.data));
                 toast.success("Data Updated Successfully")
@@ -72,13 +72,13 @@ const AddEdit = () => {
         }}
         onSubmit={handleSubmit}
         >
-            <label htmlFor="username">Username</label>
+            <label htmlFor="Username">Username</label>
             <input
             type="text"
-            id="username"
-            name="username"
+            id="Username"
+            name="Username"
             placeholder="Your Username ..."
-            value={username || ""}
+            value={Username || ""}
             onChange={handleInputChange}
             />
             <label htmlFor="Password">Password</label>
