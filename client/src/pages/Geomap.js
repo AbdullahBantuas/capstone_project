@@ -16,6 +16,7 @@ Leaflet.Icon.Default.mergeOptions({
 const MapComponent = () => {
   const [markers, setMarkers] = useState([]);
   const [clickedMarker, setClickedMarker] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const mapRef = useRef(null);
 
@@ -30,6 +31,7 @@ const MapComponent = () => {
             latitude: marker.Latitude,
             longitude: marker.Longitude,
             location_name: marker.Location_name,
+            SQI: marker.SQI,
             s_id: marker.S_id
           })));
         } catch (error) {
@@ -53,6 +55,12 @@ const MapComponent = () => {
     bottom: 0,
     width: '100%',
     height: '100%',
+    cursor: 'default',
+    '& .leaflet-touch .leaflet-control-zoom a': {
+      width: '30px !important',
+      height: '30px !important',
+      lineHeight: '30px !important',
+    }
   };
 
   const mapClicked = async (event) => {
@@ -64,9 +72,9 @@ const MapComponent = () => {
     setClickedMarker(marker);
   };
 
-  // const markerDragEnd = (event, index) => {
-  //   console.log(event.target.getLatLng().lat, event.target.getLatLng().lng);
-  // };
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+  };
 
   return (
     <MapContainer
@@ -74,26 +82,39 @@ const MapComponent = () => {
       center={center}
       zoom={zoom}
       scrollWheelZoom={false}
+      minZoom={13.5}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <MapContent onClick={mapClicked} />
-      {markers.map((marker, index) => (
-      marker.latitude && marker.longitude ? (
-        <MarkerContent
-         key={index}
-         position={{ lat: marker.latitude, lng: marker.longitude }}
-         draggable={true}
-         index={index}
-         location_name={marker.location_name}
-         s_id={marker.s_id}
-         onMarkerClick={(event) => markerClicked(marker, index)}
-        // onDragEnd={(event) => markerDragEnd(event, index)}
+      <div style={{ position: "absolute", top: "10px", left: "10px", zIndex: 9999, left: '500px', width: '200px' }}>
+        <input
+          type="text"
+          placeholder="Search for location name..."
+          value={searchTerm}
+          onChange={handleSearch}
         />
-        ) : null
-    ))}
+      </div>
+      <MapContent onClick={mapClicked} />
+      {markers
+        .filter((marker) => 
+        marker.location_name.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+        .map((marker, index) => (
+        marker.latitude && marker.longitude ? (
+          <MarkerContent
+          key={index}
+          position={{ lat: marker.latitude, lng: marker.longitude }}
+          draggable={true}
+          index={index}
+          location_name={marker.location_name}
+          SQI={marker.SQI}
+          s_id={marker.s_id}
+          onMarkerClick={(event) => markerClicked(marker, index)}
+          />
+          ) : null
+      ))}
     </MapContainer>
   );
 };
@@ -105,29 +126,31 @@ const MapContent = ({ onClick }) => {
   return null;
 };
 
-const MarkerContent = ({ position, draggable, onMarkerClick, onDragEnd, index, location_name, s_id }) => {
+const MarkerContent = ({ position, draggable, onMarkerClick, onDragEnd, index, location_name, s_id, SQI }) => {
     const markerRef = useRef();
-  
-    // const handleDragEnd = (event) => {
-    //   onDragEnd(event, index);
-    // };
   
     return (
         <Marker
           position={position}
-          //draggable={draggable}
           eventHandlers={{
             click: (event) => onMarkerClick(event),
-            //dragend: handleDragEnd,
           }}
           ref={markerRef}
         >
           <Popup>
             <b>{position.lat}, {position.lng}</b>
             <br />
-            <span>Address: {location_name}</span>
+            <b></b>
+            <br />
+            <b>Location name: {location_name}</b>
+            <br />
+            <b></b>
+            <br />
+            <b>Soil Quality Index: {SQI}</b>
             <br />  
-            <button onClick={() => { window.location.href = `/viewSoil/${s_id}` }}>View more data</button>
+            <b></b>
+            <br />
+            <button style={{ backgroundColor: "#008cba", cursor: 'pointer', display: 'inline-block', padding: '5px 8px', border: 'none', color: 'white', borderRadius:'5px' }} onClick={() => { window.location.href = `/viewSoil2/${s_id}` }}>View more data</button>
           </Popup>
         </Marker>
       );

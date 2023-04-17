@@ -146,7 +146,7 @@ app.delete("/api/removeSoil2/:S_id", (req, res) => {
 });
 
 app.get("/api/getLocation", (req, res) => {
-    const sqlGet = "SELECT * FROM soil_information";
+    const sqlGet = "SELECT * FROM soil_information a, soil_properties b WHERE a.S_id = b.S_id";
     db.query(sqlGet, (error, result) => {
         res.send(result);
     });

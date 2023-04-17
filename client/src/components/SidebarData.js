@@ -1,7 +1,7 @@
 import React from 'react';
-import * as FaIcons from 'react-icons/fa';
 import * as AiIcons from 'react-icons/ai';
-import * as IoIcons from 'react-icons/io';
+import { FiDatabase, FiUsers, FiMapPin } from "react-icons/fi";
+import { FaSistrix } from "react-icons/fa";
 
 export const SidebarData = [
   {
@@ -13,25 +13,25 @@ export const SidebarData = [
   {
     title: 'Geomap',
     path: '/geomap',
-    icon: <AiIcons.AiFillHome />,
+    icon: <FiMapPin />,
     cName: 'nav-text'
   },
   {
     title: 'Soil Data',
     path: '/soildata',
-    icon: <IoIcons.IoIosPaper />,
+    icon: <FiDatabase />,
     cName: 'nav-text'
   },
   {
     title: 'User Data',
     path: '/userdata',
-    icon: <FaIcons.FaCartPlus />,
+    icon: <FiUsers />,
     cName: 'nav-text'
   },
   {
     title: 'Researchers',
     path: '/researchers',
-    icon: <FaIcons.FaCartPlus />,
+    icon: <FaSistrix />,
     cName: 'nav-text'
   }
 

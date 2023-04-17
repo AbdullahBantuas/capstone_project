@@ -9,8 +9,10 @@ import AddEdit from './pages/AddEdit';
 import AddEditSoil from './pages/AddEditSoil';
 import View from './pages/View';
 import ViewSoil from './pages/ViewSoil';
+import ViewSoil2 from './pages/ViewSoil2';
 import SignIn from './login/SignIn';
-import Geomap from './pages/Geomap'
+import Geomap from './pages/Geomap';
+import Researchers from './pages/Researchers';
 
 function App() {
   return (
@@ -28,6 +30,8 @@ function App() {
         <Route path="/addSoil" element={<AddEditSoil />} />
         <Route path="/updateSoil/:id" element={<AddEditSoil />} />
         <Route path="/viewSoil/:id" element={<ViewSoil />} />
+        <Route path="/viewSoil2/:id" element={<ViewSoil2 />} />
+        <Route path="/researchers" element={<Researchers />} />
       </Routes>
     </Router>
   );
