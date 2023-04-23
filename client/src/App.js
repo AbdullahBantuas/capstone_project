@@ -2,17 +2,18 @@ import React from 'react';
 import './App.css';
 import Navbar from './components/Navbar';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import Home from './pages/Home';
-import SoilData from './pages/SoilData';
-import UserData from './pages/UserData';
-import AddEdit from './pages/AddEdit';
-import AddEditSoil from './pages/AddEditSoil';
-import View from './pages/View';
-import ViewSoil from './pages/ViewSoil';
-import ViewSoil2 from './pages/ViewSoil2';
+import Dashboard from './AdminPages/Dashboard/Dashboard';
+import SoilData from './AdminPages/SoilData/SoilData';
+import UserData from './AdminPages/UserData/UserData';
+import AddEdit from './AdminPages/UserData/AddEdit';
+import AddEditSoil from './AdminPages/SoilData/AddEditSoil';
+import View from './AdminPages/UserData/View';
+import ViewSoil from './AdminPages/SoilData/ViewSoil';
+import ViewSoil2 from './AdminPages/Geomap/ViewSoil2';
 import SignIn from './login/SignIn';
-import Geomap from './pages/Geomap';
-import Researchers from './pages/Researchers';
+import Geomap from './AdminPages/Geomap/Geomap';
+import Researchers from './AdminPages/Researchers/Researchers';
+import Home from './UserPages/Home';
 
 function App() {
   return (
@@ -20,7 +21,7 @@ function App() {
       <Navigation />
       <Routes>
         <Route path="/" element={<SignIn />} />
-        <Route path="/home" element={<Home />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/geomap" element={<Geomap />} />
         <Route path="/soildata" element={<SoilData />} />
         <Route path="/userdata" element={<UserData />} />
@@ -32,6 +33,7 @@ function App() {
         <Route path="/viewSoil/:id" element={<ViewSoil />} />
         <Route path="/viewSoil2/:id" element={<ViewSoil2 />} />
         <Route path="/researchers" element={<Researchers />} />
+        <Route path="/home" element={<Home />} />
       </Routes>
     </Router>
   );

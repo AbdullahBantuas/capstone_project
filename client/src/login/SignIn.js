@@ -27,6 +27,8 @@ export default function SignIn() {
     event.preventDefault();
     console.log(`Username: ${username}, Password: ${password}`);
     if (username === "username" && password === "password") {
+      setTimeout(() => navigate("/dashboard"), 500);
+    } else if (username === "username1" && password === "password1"){
       setTimeout(() => navigate("/home"), 500);
     }
   };

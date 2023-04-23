@@ -22,6 +22,13 @@ app.get("/api/get", (req, res) => {
     });
 });
 
+app.get("/api/admin", (req, res) => {
+    const sqlGet = "SELECT * FROM admin";
+    db.query(sqlGet, (error, result) => {
+        res.send(result);
+    });
+});
+
 app.post("/api/post", (req, res) => {
     const { Username, Password, Fullname, Email } = req.body;
     const sqlInsert = "INSERT INTO user (Username, Password, Fullname, Email) VALUES (?, ?, ?, ?)";
@@ -55,9 +62,9 @@ app.get("/api/get/:U_id", (req, res) => {
 
 app.put("/api/update/:U_id", (req, res) => {
     const { U_id } = req.params;
-    const { username, Password, Fullname, Email } = req.body;
-    const sqlUpdate = "UPDATE user SET username = ?, Password = ?, Fullname = ?, Email = ? WHERE U_id = ?";
-    db.query(sqlUpdate, [username, Password, Fullname, Email, U_id], (error, result) => {
+    const { Username, Password, Fullname, Email } = req.body;
+    const sqlUpdate = "UPDATE user SET Username = ?, Password = ?, Fullname = ?, Email = ? WHERE U_id = ?";
+    db.query(sqlUpdate, [Username, Password, Fullname, Email, U_id], (error, result) => {
         if (error) {
             console.log(error);
         }
@@ -147,6 +154,27 @@ app.delete("/api/removeSoil2/:S_id", (req, res) => {
 
 app.get("/api/getLocation", (req, res) => {
     const sqlGet = "SELECT * FROM soil_information a, soil_properties b WHERE a.S_id = b.S_id";
+    db.query(sqlGet, (error, result) => {
+        res.send(result);
+    });
+});
+
+app.get("/api/soilCount", (req, res) => {
+    const sqlGet = "SELECT COUNT(*) FROM soil_information";
+    db.query(sqlGet, (error, result) => {
+        res.send(result);
+    });
+});
+
+app.get("/api/userCount", (req, res) => {
+    const sqlGet = "SELECT COUNT(*) FROM user";
+    db.query(sqlGet, (error, result) => {
+        res.send(result);
+    });
+});
+
+app.get("/api/adminCount", (req, res) => {
+    const sqlGet = "SELECT COUNT(*) FROM admin";
     db.query(sqlGet, (error, result) => {
         res.send(result);
     });

@@ -1,13 +1,13 @@
 import React from 'react';
-import * as AiIcons from 'react-icons/ai';
+import { MdDashboard } from "react-icons/md";
 import { FiDatabase, FiUsers, FiMapPin } from "react-icons/fi";
 import { FaSistrix } from "react-icons/fa";
 
 export const SidebarData = [
   {
-    title: 'Home',
-    path: '/home',
-    icon: <AiIcons.AiFillHome />,
+    title: 'Dashboard',
+    path: '/dashboard',
+    icon: <MdDashboard />,
     cName: 'nav-text'
   },
   {
