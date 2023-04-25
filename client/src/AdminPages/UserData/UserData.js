@@ -3,12 +3,14 @@ import { toast, ToastContainer } from "react-toastify";
 import { Link } from "react-router-dom";
 import "./UserData.css";
 import axios from "axios";
+import DeleteIcon from '@mui/icons-material/Delete';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 function UserData() {
   const [data, setData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [itemsPerPage, setItemsPerPage] = useState(3);
   const [totalItems, setTotalItems] = useState(0);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -49,7 +51,7 @@ function UserData() {
     
     <div className="userdata" style={{ marginTop: "115px" }}>
       <ToastContainer position="center" />
-      <div className="search-container">
+      <div style={{ justifyContent: 'start', marginTop: '-20px', marginLeft: '885px', width: '20%' }}>
         <input
           type="text"
           placeholder="Search by Fullname"
@@ -79,10 +81,10 @@ function UserData() {
                       className="btn btn-delete"
                       onClick={() => deleteContact(item.U_id)}
                     >
-                      Delete
+                      <DeleteIcon/>
                     </button>
                     <Link to={`/view/${item.U_id}`}>
-                      <button className="btn btn-view">View</button>
+                      <button className="btn btn-view"><VisibilityIcon/></button>
                     </Link>
                   </div>
                 </td>

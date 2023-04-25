@@ -3,12 +3,16 @@ import { toast, ToastContainer } from "react-toastify";
 import { Link } from "react-router-dom";
 import "./SoilData.css";
 import axios from "axios";
+import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 function SoilData() {
   const [data, setData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [itemsPerPage, setItemsPerPage] = useState(3);
   const [totalItems, setTotalItems] = useState(0);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -47,9 +51,12 @@ function SoilData() {
   const currentData = filteredData.slice(indexOfFirstItem, indexOfLastItem);
 
   return (
-    
     <div className="soildata" style={{ marginTop: "115px" }}>
-      <ToastContainer position="center" />
+      <div className="add-container">
+        <Link to="/addSoil">
+            <button className="add"><AddIcon /></button>
+        </Link>
+      </div>
       <div className="search-container">
         <input
           type="text"
@@ -58,6 +65,7 @@ function SoilData() {
           onChange={handleSearch}
         />
       </div>
+      <ToastContainer position="center" />
       <table className="styled-table">
         <thead>
           <tr>
@@ -77,19 +85,16 @@ function SoilData() {
                 <td>
                   <div className="btn-group">
                     <Link to={`/updateSoil/${item.S_id}`}>
-                      <button className="btn btn-edit">Edit</button>
+                      <button className="btn btn-edit"><EditIcon/></button>
                     </Link>
                     <button
                       className="btn btn-delete"
                       onClick={() => deleteContact(item.S_id)}
                     >
-                      Delete
+                      <DeleteIcon/>
                     </button>
-                    <Link to="/addSoil">
-                      <button className="btn btn-contact">Add</button>
-                    </Link>
                     <Link to={`/viewSoil/${item.S_id}`}>
-                      <button className="btn btn-view">View</button>
+                      <button className="btn btn-view"><VisibilityIcon/></button>
                     </Link>
                   </div>
                 </td>

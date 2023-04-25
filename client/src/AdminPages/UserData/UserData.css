@@ -1,15 +1,16 @@
 .styled-table {
     border-collapse: collapse;
-    margin: -70px auto;
+    margin: -20px auto;
     font-size: 0.9em;
     font-family: sans-serif;
     min-width: 80%;
     overflow: hidden;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    margin-top: 30px;
 }
 
 .styled-table thead tr {
-    background-color: #009879;
+    background-color: #108f50;
     color: #ffffff;
     text-align: center;
 }
@@ -41,18 +42,43 @@
     text-decoration: none;
     display: inline-block;
     border-radius: 5px;
-    font-size: 16px;
+    font-size: 15px;
     margin: 4px 2px;
     cursor: pointer;
 }
 
+.add-container,
 .search-container {
-    justify-content: center;
-    position: absolute;
-    top: 15px;
-    left: 1050px;
-    display: grid;
-    margin: auto;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.search-container {
+    justify-content: start;
+    margin-top: -20px;
+    margin-left: 10px;
+    width: 20%;
+}
+
+.add-container {
+    justify-content: start;
+    margin-top: -14px;
+    margin-left: 830px;
+}
+
+.add {
+    margin-right: 8px;
+    background-color: #008cba;
+    border: none;
+    color: white;
+    padding: 5px 8px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    border-radius: 30px;
+    font-size: 15px;
+    margin: 4px 2px;
+    cursor: pointer;
 }
 
 .pagination {
@@ -96,7 +122,7 @@
 }
 
 .btn-edit {
-    background-color: #008cba;
+    background-color: #0f895a;
 }
 
 .btn-delete {
@@ -105,10 +131,6 @@
 
 .btn-view {
     background-color: #807e7e;
-}
-
-.btn-contact {
-    background-color: #e82764;
 }
 
 .dropdown-button {

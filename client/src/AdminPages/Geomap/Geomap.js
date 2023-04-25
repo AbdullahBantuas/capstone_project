@@ -1,7 +1,8 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import Leaflet from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { MapContainer, TileLayer, Popup, useMapEvents, Marker } from "react-leaflet";
+import "./Geomap.css";
+import { MapContainer, TileLayer, Popup, useMapEvents, Marker, ZoomControl } from "react-leaflet";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
 import markerRetina from "leaflet/dist/images/marker-icon-2x.png";
@@ -49,18 +50,13 @@ const MapComponent = () => {
   const zoom = 13.5;
   const containerStyle = {
     position: 'absolute',
-    top: '85px',
+    top: '70px',
     left: 0,
     right: 0,
     bottom: 0,
     width: '100%',
     height: '100%',
     cursor: 'default',
-    '& .leaflet-touch .leaflet-control-zoom a': {
-      width: '30px !important',
-      height: '30px !important',
-      lineHeight: '30px !important',
-    }
   };
 
   const mapClicked = async (event) => {
@@ -76,6 +72,32 @@ const MapComponent = () => {
     setSearchTerm(event.target.value);
   };
 
+  const legendStyle = {
+    position: 'fixed',
+    top: '83px',
+    right: '10px',
+    backgroundColor: 'white',
+    padding: '10px',
+    border: '1px solid #ccc',
+    borderRadius: '5px',
+    boxShadow: "0 2px 5px rgba(0,0,0,.3)",
+    zIndex: '999',
+  };
+
+  const sqiLegendStyle = {
+    display: "flex",
+    alignItems: "center",
+    margin: "5px 0",
+  };
+  
+  const sqiCircleStyle = (color) => ({
+    backgroundColor: color,
+    borderRadius: "50%",
+    height: "10px",
+    width: "10px",
+    marginRight: "5px",
+  });
+
   return (
     <MapContainer
       style={containerStyle}
@@ -83,12 +105,16 @@ const MapComponent = () => {
       zoom={zoom}
       scrollWheelZoom={false}
       minZoom={13.5}
+      zoomControl={false}
     >
       <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        // attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        // url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <div style={{ position: "absolute", top: "10px", left: "10px", zIndex: 9999, left: '500px', width: '200px' }}>
+      <ZoomControl position="topleft" />
+      <div style={{ position: "fixed", top: "10px", left: "10px", zIndex: 999, left: '500px', width: '250px', marginTop: '63px' }}>
         <input
           type="text"
           placeholder="Search for location name..."
@@ -115,6 +141,23 @@ const MapComponent = () => {
           />
           ) : null
       ))}
+      <div style={legendStyle}>
+        <p><strong>Legend:</strong></p>
+        <div style={sqiLegendStyle}>
+          <div style={sqiCircleStyle("#2ecc71")}></div>
+          <p>High SQI</p>
+        </div>
+        <div style={sqiLegendStyle}>
+          <div style={sqiCircleStyle("#ff851b")}></div>
+          <p>Medium SQI</p>
+        </div>
+        <div style={sqiLegendStyle}>
+          <div style={sqiCircleStyle("#ff4136")}></div>
+          <p>Low SQI</p>
+        </div>
+        <p>Markers represent locations on the map.</p>
+        <p>SQI is a measure of the soil quality.</p>
+      </div>
     </MapContainer>
   );
 };
@@ -128,6 +171,46 @@ const MapContent = ({ onClick }) => {
 
 const MarkerContent = ({ position, draggable, onMarkerClick, onDragEnd, index, location_name, s_id, SQI }) => {
     const markerRef = useRef();
+
+    const LeafIcon = Leaflet.Icon.extend({
+      options: {},
+    });
+  
+    const blueIcon = new LeafIcon({
+      iconUrl:
+        "https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|abcdef&chf=a,s,ee00FFFF"
+    });
+  
+    const redIcon = new LeafIcon({
+      iconUrl:
+        "https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|ff4136&chf=a,s,ee00FFFF",
+    });
+    const orangeIcon = new LeafIcon({
+      iconUrl:
+        "https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|ff851b&chf=a,s,ee00FFFF",
+    });
+    const greenIcon = new LeafIcon({
+      iconUrl:
+        "https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|2ecc71&chf=a,s,ee00FFFF",
+    });
+
+    const [icon, setIcon] = useState(redIcon);
+
+    const changeIconColor = useCallback((SQI) => {
+      if (SQI >= 0.8) {
+        setIcon(greenIcon);
+      } else if (SQI >= 0.5 && SQI < 0.8) {
+        setIcon(orangeIcon);
+      } else if (SQI < 0.5) {
+        setIcon(redIcon);
+      } else {
+        setIcon(blueIcon);
+      }
+    }, [blueIcon, orangeIcon, greenIcon, redIcon]);
+
+    useEffect(() => {
+      changeIconColor(SQI);
+    }, [SQI, changeIconColor]);
   
     return (
         <Marker
@@ -136,6 +219,7 @@ const MarkerContent = ({ position, draggable, onMarkerClick, onDragEnd, index, l
             click: (event) => onMarkerClick(event),
           }}
           ref={markerRef}
+          icon={icon}
         >
           <Popup>
             <b>{position.lat}, {position.lng}</b>
