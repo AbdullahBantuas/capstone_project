@@ -39,7 +39,7 @@ function Navbar() {
       <IconContext.Provider value={{ color: '#fff' }}>
         <div ref={navbarRef} className='navbar'>
           <Link to='#' className='menu-bars'>
-            <FaIcons.FaBars onClick={showSidebar} />
+            <FaIcons.FaBars onClick={showSidebar} style={{ marginLeft: '-20px' }}/>
           </Link>
           <div className='nav-title'>GIS-Based Data Management For Soil Quality Index</div>
         </div>

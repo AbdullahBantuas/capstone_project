@@ -13,7 +13,7 @@ import ViewSoil2 from './AdminPages/Geomap/ViewSoil2';
 import SignIn from './login/SignIn';
 import Geomap from './AdminPages/Geomap/Geomap';
 import Researchers from './AdminPages/Researchers/Researchers';
-import Home from './UserPages/Home';
+import UserHome from './UserPages/UserHome';
 
 function App() {
   return (
@@ -33,7 +33,7 @@ function App() {
         <Route path="/viewSoil/:id" element={<ViewSoil />} />
         <Route path="/viewSoil2/:id" element={<ViewSoil2 />} />
         <Route path="/researchers" element={<Researchers />} />
-        <Route path="/home" element={<Home />} />
+        <Route path="/userhome" element={<UserHome />} />
       </Routes>
     </Router>
   );

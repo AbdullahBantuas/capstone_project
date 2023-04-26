@@ -23,7 +23,7 @@ app.get("/api/get", (req, res) => {
 });
 
 app.get("/api/admin", (req, res) => {
-    const sqlGet = "SELECT * FROM admin";
+    const sqlGet = "SELECT Username, Password FROM admin";
     db.query(sqlGet, (error, result) => {
         res.send(result);
     });
@@ -78,16 +78,6 @@ app.get("/api/soil", (req, res) => {
         res.send(result);
     });
 });
-
-// app.post("/api/addsoil", (req, res) => {
-//     const { Location_name, Latitude, Longitude, Bulk_density, Particle_density, Void_ratio, Total_porosity, Moisture_content, Water_holding_capacity, Soil_texture, Soil_color, Soil_pH, Nitrogen, Phosphorus, Potassium, Cation_exchange_capacity } = req.body;
-//     const sqlInsert = "INSERT INTO soil_location (Location_name, Latitude, Longitude) VALUES (?, ?, ?); INSERT INTO physical_properties (Bulk_density, Particle_density, Void_ratio, Total_porosity, Moisture_content, Water_holding_capacity, Soil_texture, Soil_color) VALUES (?, ?, ?, ?, ?, ?, ?, ?); INSERT INTO chemical_properties (Soil_pH, Nitrogen, Phosphorus, Potassium, Cation_exchange_capacity) VALUES (?, ?, ?, ?, ?);";
-//     db.query(sqlInsert, [Location_name, Latitude, Longitude, Bulk_density, Particle_density, Void_ratio, Total_porosity, Moisture_content, Water_holding_capacity, Soil_texture, Soil_color, Soil_pH, Nitrogen, Phosphorus, Potassium, Cation_exchange_capacity], (error, result) => {
-//         if (error) {
-//             console.log(error);
-//         }
-//     });
-// });
 
 app.post("/api/addsoil", (req, res) => {
     const { Location_name, Latitude, Longitude, Description } = req.body;

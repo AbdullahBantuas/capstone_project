@@ -3,7 +3,7 @@ import { toast, ToastContainer } from "react-toastify";
 import { Link } from "react-router-dom";
 import "./SoilData.css";
 import axios from "axios";
-import AddIcon from '@mui/icons-material/Add';
+import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -54,7 +54,7 @@ function SoilData() {
     <div className="soildata" style={{ marginTop: "115px" }}>
       <div className="add-container">
         <Link to="/addSoil">
-            <button className="add"><AddIcon /></button>
+            <button className="add"><AddLocationAltIcon /></button>
         </Link>
       </div>
       <div className="search-container">
@@ -65,7 +65,6 @@ function SoilData() {
           onChange={handleSearch}
         />
       </div>
-      <ToastContainer position="center" />
       <table className="styled-table">
         <thead>
           <tr>

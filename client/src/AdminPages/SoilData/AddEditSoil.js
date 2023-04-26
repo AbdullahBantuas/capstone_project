@@ -357,22 +357,23 @@ const AddEditSoil = () => {
                             onChange={handleInputChange}
                             />
                             </div>
-                            <div className="input-field">
+                            <div className="input-field2">
                             <label htmlFor="Description">Description</label>
-                            <input
+                            <textarea
                             type="text"
                             id="Description"
                             name="Description"
                             placeholder="Description ..."
                             value={Description || ""}
                             onChange={handleInputChange}
+                            style={{ height: "100px", width: "500px" }}
                             />
                             </div>
                         </div>
                             <div className="button">
                             <input type="submit" value={id ? "Update" : "Save"} />
                             <Link to="/soildata">
-                                <input type="button" value="Go Back" />
+                                <input type="button" style={{marginLeft: "10px"}} value="Go Back" />
                             </Link>
                             </div>
                     </div>

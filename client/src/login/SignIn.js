@@ -1,96 +1,158 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import {
-  Avatar,
-  Box,
-  Button,
-  Checkbox,
-  Container,
-  CssBaseline,
-  FormControlLabel,
-  Grid,
-  Link,
-  TextField,
-  Typography,
-} from "@mui/material";
-import { LockOutlined } from "@mui/icons-material";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import React, {useState, useEffect} from 'react';
+import {useNavigate, useParams, Link} from "react-router-dom";
+import "./SignIn.css";
+import axios from "axios";
+import {toast} from "react-toastify";
 
-const theme = createTheme();
+const initialState = {
+  Username: "",
+  Password: "",
+  Fullname: "",
+  Email: "",
+  Username1: "",
+  Password1: "",
+};
 
-export default function SignIn() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+function SignIn() {
+  const [state, setState] = useState(initialState);
+  const {Username, Password, Fullname, Email, Username1, Password1} = state;
   const navigate = useNavigate();
+  // const {id} = useParams();
+  const [isSignUp, setIsSignUp] = useState(false);
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log(`Username: ${username}, Password: ${password}`);
-    if (username === "username" && password === "password") {
-      setTimeout(() => navigate("/dashboard"), 500);
-    } else if (username === "username1" && password === "password1"){
-      setTimeout(() => navigate("/home"), 500);
+  const handleSwitch = () => {
+    setIsSignUp(!isSignUp);
+  };
+
+  const handleSignUp = (e) => {
+    e.preventDefault();
+    if(!Username || !Password || !Fullname || !Email) {
+      toast.success("Fill in both fields.")
+    } else {
+        axios.post("http://localhost:5000/api/post", {
+          Username,
+          Password,
+          Fullname,
+          Email
+      })
+      .then(() => {
+          setState({Username: "", Password: "", Fullname: "", Email: ""});
+      })
+      .catch((err) => toast.error(err.response.data));
+      toast.success("Data Added Successfully")
     }
   };
 
+  const handleSignIn = (e) => {
+    e.preventDefault();
+    if(!Username1 || !Password1) {
+      toast.success("Fill in both fields..")
+    } else {
+      axios.get("http://localhost:5000/api/admin", {
+        Username1,
+        Password1,
+      })
+      .then(() => {
+        setState({Username1: "", Password1: ""});
+        setTimeout(() => navigate("/dashboard"), 500);
+      })
+      .catch((err) => {
+        setState({ Username1: "", Password1: "" });
+        toast.error("Invalid username or password.");
+      });
+    }
+    
+  };
+
+  const handleInputChange = (e) => {
+    const {name, value} = e.target;
+    setState({...state, [name]: value});
+  };
+
   return (
-    <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Box sx={{ marginTop: 8, display: "flex", flexDirection: "column", alignItems: "center" }}>
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <LockOutlined />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
-          </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="username"
-              label="Username"
-              name="username"
-              autoComplete="username"
-              autoFocus
-              value={username}
-              onChange={(event) => setUsername(event.target.value)}
+    <div className="App signIn-background">
+      <div className={`container ${isSignUp ? "right-panel-active" : ""}`}>
+      <div className="form-container sign-up-container">
+        <form className='form1' onSubmit={handleSignUp}>
+          <h1 className='h11'>  CREATE ACCOUNT</h1>
+          <input
+            className='input1'
+            type="text"
+            id="Username"
+            name="Username"
+            placeholder="Username"
+            value={Username || ""}
+            onChange={handleInputChange}
             />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
+            <input
+            className='input1'
+            type="password"
+            id="Password"
+            name="Password"
+            placeholder="Password"
+            value={Password || ""}
+            onChange={handleInputChange}
             />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
+            <input
+            className='input1'
+            type="text"
+            id="Fullname"
+            name="Fullname"
+            placeholder="Fullname"
+            value={Fullname || ""}
+            onChange={handleInputChange}
             />
-            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-              Sign In
-            </Button>
-            <Grid container justifyContent="space-between">
-              <Grid item>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="#" variant="body2">
-                  Don't have an account? Sign Up
-                </Link>
-              </Grid>
-            </Grid>
-          </Box>
-        </Box>
-      </Container>
-    </ThemeProvider>
+            <input
+            className='input1'
+            type="email"
+            id="Email"
+            name="Email"
+            placeholder="Email"
+            value={Email || ""}
+            onChange={handleInputChange}
+            />
+          <button className='button1' onClick={handleSwitch} type="submit">SUBMIT</button>
+        </form>
+      </div>
+      <div className="form-container sign-in-container">
+        <form className='form1' onSubmit={handleSignIn}>
+          <h1 className='h11'>LOGIN</h1>
+          <input
+            className='input1'
+            type="text"
+            placeholder="Username"
+            name="Username1"
+            value={Username1 || ""}
+            onChange={handleInputChange}
+          />
+          <input
+            className='input1'
+            type="password"
+            placeholder="Password"
+            name="Password1"
+            value={Password1 || ""}
+            onChange={handleInputChange}
+          />
+          <button className='button1' type="submit">LOGIN</button>
+        </form>
+      </div>
+        <div className="overlay-container">
+          <div className="overlay">
+            <div className="overlay-panel overlay-left">
+              <h1 className='h11'>Welcome Back!</h1>
+              <p className='p1'>To keep connected with us please login with your personal info</p>
+              <button className="button1 ghost" onClick={handleSwitch}>Sign In</button>
+            </div>
+            <div className="overlay-panel overlay-right">
+              <h1 className='h11'>Hello, Friend!</h1>
+              <p className='p1'>Enter your personal details and start journey with us</p>
+              <button className="button1 ghost" onClick={handleSwitch}>Sign Up</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
+
+export default SignIn;

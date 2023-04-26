@@ -50,7 +50,6 @@ function UserData() {
   return (
     
     <div className="userdata" style={{ marginTop: "115px" }}>
-      <ToastContainer position="center" />
       <div style={{ justifyContent: 'start', marginTop: '-20px', marginLeft: '885px', width: '20%' }}>
         <input
           type="text"
