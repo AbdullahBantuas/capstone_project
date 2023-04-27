@@ -44,8 +44,8 @@ const MapComponent = () => {
   }, []);
 
   const center = {
-    lat: 8.0106,
-    lng: 124.2977,
+    lat: 7.997001,
+    lng: 124.264073,
   };
   const zoom = 13.5;
   const containerStyle = {
@@ -71,6 +71,28 @@ const MapComponent = () => {
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
   };
+
+  const LeafIcon = Leaflet.Icon.extend({
+    options: {},
+  });
+
+  const blueIcon = new LeafIcon({
+    iconUrl:
+      "https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|abcdef&chf=a,s,ee00FFFF"
+  });
+
+  const redIcon = new LeafIcon({
+    iconUrl:
+      "https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|ff4136&chf=a,s,ee00FFFF",
+  });
+  const orangeIcon = new LeafIcon({
+    iconUrl:
+      "https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FFFF00&chf=a,s,ee00FFFF",
+  });
+  const greenIcon = new LeafIcon({
+    iconUrl:
+      "https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|2ecc71&chf=a,s,ee00FFFF",
+  });
 
   const legendStyle = {
     position: 'fixed',
@@ -137,6 +159,10 @@ const MapComponent = () => {
           location_name={marker.location_name}
           SQI={marker.SQI}
           s_id={marker.s_id}
+          redIcon={redIcon}
+          orangeIcon={orangeIcon}
+          blueIcon={blueIcon}
+          greenIcon={greenIcon}
           onMarkerClick={(event) => markerClicked(marker, index)}
           />
           ) : null
@@ -145,18 +171,18 @@ const MapComponent = () => {
         <p><strong>Legend:</strong></p>
         <div style={sqiLegendStyle}>
           <div style={sqiCircleStyle("#2ecc71")}></div>
-          <p>High SQI</p>
+          <p>High SQI - Minimal crop rehabilitation needed.</p>
         </div>
         <div style={sqiLegendStyle}>
-          <div style={sqiCircleStyle("#ff851b")}></div>
-          <p>Medium SQI</p>
+          <div style={sqiCircleStyle("#FFFF00")}></div>
+          <p>Medium SQI - Urgent soil management required</p>
         </div>
+          <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;with limitations.</p>
         <div style={sqiLegendStyle}>
           <div style={sqiCircleStyle("#ff4136")}></div>
-          <p>Low SQI</p>
+          <p>Low SQI - Urgent and severe soil management and</p>
         </div>
-        <p>Markers represent locations on the map.</p>
-        <p>SQI is a measure of the soil quality.</p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rehabilitation required.</p>
       </div>
     </MapContainer>
   );
@@ -169,37 +195,15 @@ const MapContent = ({ onClick }) => {
   return null;
 };
 
-const MarkerContent = ({ position, draggable, onMarkerClick, onDragEnd, index, location_name, s_id, SQI }) => {
+const MarkerContent = ({ position, draggable, onMarkerClick, onDragEnd, index, location_name, s_id, SQI, redIcon, greenIcon, orangeIcon, blueIcon }) => {
     const markerRef = useRef();
-
-    const LeafIcon = Leaflet.Icon.extend({
-      options: {},
-    });
-  
-    const blueIcon = new LeafIcon({
-      iconUrl:
-        "https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|abcdef&chf=a,s,ee00FFFF"
-    });
-  
-    const redIcon = new LeafIcon({
-      iconUrl:
-        "https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|ff4136&chf=a,s,ee00FFFF",
-    });
-    const orangeIcon = new LeafIcon({
-      iconUrl:
-        "https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|ff851b&chf=a,s,ee00FFFF",
-    });
-    const greenIcon = new LeafIcon({
-      iconUrl:
-        "https://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|2ecc71&chf=a,s,ee00FFFF",
-    });
 
     const [icon, setIcon] = useState(redIcon);
 
     const changeIconColor = useCallback((SQI) => {
-      if (SQI >= 0.8) {
+      if (SQI > 0.8) {
         setIcon(greenIcon);
-      } else if (SQI >= 0.5 && SQI < 0.8) {
+      } else if (SQI >= 0.5 && SQI <= 0.8) {
         setIcon(orangeIcon);
       } else if (SQI < 0.5) {
         setIcon(redIcon);

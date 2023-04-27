@@ -45,7 +45,7 @@ const AddEditSoil = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         if(!Location_name || !Latitude || !Longitude || !Description || !Bulk_density || !Particle_density || !Void_ratio || !Porosity || !Moisture_content_mass || !Moisture_content_volume || !Water_holding_capacity || !Clay || !Silt || !Sand || !Soil_pH || !Total_nitrogen || !Extractable_phosphorus || !Exchangeable_potassium || !Cation_exchange_capacity || !Organic_matter || !Earthworm_density || !SQI) {
-            toast.error("Please provide value into each input field");
+            alert("Please provide value into each input field");
         } else {
             if(!id) {
                 axios.post(`http://localhost:5000/api/addsoil`, {
@@ -77,7 +77,7 @@ const AddEditSoil = () => {
                     setState({Location_name: "", Latitude: "", Longitude: "", Description: "", Bulk_density: "", Particle_density: "", Void_ratio: "", Porosity: "", Moisture_content_mass: "", Moisture_content_volume: "", Water_holding_capacity: "", Clay: "", Silt: "", Sand: "", Soil_pH: "", Total_nitrogen: "", Extractable_phosphorus: "", Exchangeable_potassium: "", Cation_exchange_capacity: "", Organic_matter, Earthworm_density: "", SQI: ""});
                 })
                 .catch((err) => toast.error(err.response.data));
-                toast.success("Data Added Successfully")
+                alert("Data Added Successfully")
                 setTimeout(() => navigate("/soildata"), 500);
             } else {
                 axios.put(`http://localhost:5000/api/updatesoil/${id}`, {
@@ -107,7 +107,7 @@ const AddEditSoil = () => {
                     setState({Location_name: "", Latitude: "", Longitude: "", Description: "", Bulk_density: "", Particle_density: "", Void_ratio: "", Porosity: "", Moisture_content_mass: "", Moisture_content_volume: "", Water_holding_capacity: "", Clay: "", Silt: "", Sand: "", Soil_pH: "", Total_nitrogen: "", Extractable_phosphorus: "", Exchangeable_potassium: "", Cation_exchange_capacity: "", Organic_matter, Earthworm_density: "", SQI: ""});
                 })
                 .catch((err) => toast.error(err.response.data));
-                toast.success("Data Updated Successfully")
+                alert("Data Updated Successfully")
                 setTimeout(() => navigate("/soildata"), 500);
             }
         }
@@ -120,8 +120,8 @@ const AddEditSoil = () => {
   return (
     <div className="body">
         <div className="container">
-            <header>ADD SOIL</header>
-            <form action="#" onSubmit={handleSubmit}>
+            <header className='header2'>ADD SOIL</header>
+            <form className='form2' action="#" onSubmit={handleSubmit}>
                 <div className="form first">
                     <div className="details personal">
                         <span className="title">Soil Information</span>
@@ -360,6 +360,7 @@ const AddEditSoil = () => {
                             <div className="input-field2">
                             <label htmlFor="Description">Description</label>
                             <textarea
+                            className='input2'
                             type="text"
                             id="Description"
                             name="Description"
@@ -380,7 +381,6 @@ const AddEditSoil = () => {
                 </div>
             </form>
         </div>
-        <script src="script.js"></script>
     </div>
   )
 }

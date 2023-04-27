@@ -3,6 +3,7 @@ import { toast, ToastContainer } from "react-toastify";
 import { Link } from "react-router-dom";
 import "./UserData.css";
 import axios from "axios";
+import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 
@@ -32,7 +33,15 @@ function UserData() {
   const deleteContact = (U_id) => {
     if (window.confirm("Are you sure that you want to delete that content?")) {
       axios.delete(`http://localhost:5000/api/remove/${U_id}`);
-      toast.success("contact deleted successfully");
+      alert("User deleted successfully");
+      setTimeout(() => loadData(), 500);
+    }
+  };
+
+  const updateContact = (U_id) => {
+    if (window.confirm("This user will be set to admin!")) {
+      axios.put(`http://localhost:5000/api/update/${U_id}`);
+      alert("User set to admin");
       setTimeout(() => loadData(), 500);
     }
   };
@@ -76,6 +85,12 @@ function UserData() {
                 <td>{item.Email}</td>
                 <td>
                   <div className="btn-group">
+                    <button
+                      className="btn btn-edit"
+                      onClick={() => updateContact(item.U_id)}
+                    >
+                      <EditIcon/>
+                    </button>
                     <button
                       className="btn btn-delete"
                       onClick={() => deleteContact(item.U_id)}

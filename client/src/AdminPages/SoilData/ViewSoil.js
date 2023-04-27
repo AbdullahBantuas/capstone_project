@@ -24,6 +24,13 @@ export default function About() {
   return (
     <>
       <RootStyle ref={componentRef}>
+        <Link to="/soildata">
+            <div className="btn btn-edit">Go Back</div>
+        </Link>
+        <ReactToPrint
+            trigger={() => <button className="btn btn-view" onClick={() => window.print()}>Print</button>}
+            content={() => componentRef.current}
+        />
         <Grid container direction="column" alignItems="center">
           <Typography
             variant="h5"
@@ -417,7 +424,7 @@ export default function About() {
           sx={{ paddingTop: 5 }}
         >
           <Typography
-            variant="h6"
+            variant="h7"
             sx={{ color: " black", textAlign: "center" }}
           >
             Description
@@ -432,17 +439,10 @@ export default function About() {
           <TextField
             multiline
             disabled
-            sx={{ bgcolor: "white", width: "170vh" }}
+            sx={{ bgcolor: "white", width: "130vh" }}
             value={user.Description}
           />
         </Grid>
-        <Link to="/soildata">
-            <div className="btn btn-edit">Go Back</div>
-        </Link>
-        <ReactToPrint
-            trigger={() => <button className="btn btn-view" onClick={() => window.print()}>Print</button>}
-            content={() => componentRef.current}
-        />
       </RootStyle>
     </>
   );

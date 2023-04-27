@@ -35,7 +35,7 @@ function SoilData() {
     if (window.confirm("Are you sure that you want to delete that content?")) {
       axios.delete(`http://localhost:5000/api/removeSoil2/${S_id}`);
       axios.delete(`http://localhost:5000/api/removeSoil/${S_id}`);
-      toast.success("contact deleted successfully");
+      alert("contact deleted successfully");
       setTimeout(() => loadData(), 500);
     }
   };

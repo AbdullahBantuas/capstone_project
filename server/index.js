@@ -16,22 +16,32 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/api/get", (req, res) => {
-    const sqlGet = "SELECT * FROM user";
+    const sqlGet = "SELECT * FROM user WHERE Status = 'user'";
     db.query(sqlGet, (error, result) => {
         res.send(result);
     });
 });
 
-app.get("/api/admin", (req, res) => {
-    const sqlGet = "SELECT Username, Password FROM admin";
-    db.query(sqlGet, (error, result) => {
-        res.send(result);
+app.post("/api/login", (req, res) => {
+    const { Username, Password } = req.body;
+    const sqlQuery = "SELECT * FROM user WHERE Username = ? AND Password = ?";
+    db.query(sqlQuery, [Username, Password], (err, result) => {
+        if(err) return res.json({Message: "Error inside server"});
+        if(result.length > 0){
+            const user = result[0];
+            return res.json({
+                Login: true,
+                Status: user.Status
+            })
+        } else {
+            return res.json({Login: false})
+        }
     });
-});
+  });
 
 app.post("/api/post", (req, res) => {
     const { Username, Password, Fullname, Email } = req.body;
-    const sqlInsert = "INSERT INTO user (Username, Password, Fullname, Email) VALUES (?, ?, ?, ?)";
+    const sqlInsert = "INSERT INTO user (Username, Password, Fullname, Email, Status) VALUES (?, ?, ?, ?, 'user')";
     db.query(sqlInsert, [Username, Password, Fullname, Email], (error, result) => {
         if (error) {
             console.log(error);
@@ -62,9 +72,8 @@ app.get("/api/get/:U_id", (req, res) => {
 
 app.put("/api/update/:U_id", (req, res) => {
     const { U_id } = req.params;
-    const { Username, Password, Fullname, Email } = req.body;
-    const sqlUpdate = "UPDATE user SET Username = ?, Password = ?, Fullname = ?, Email = ? WHERE U_id = ?";
-    db.query(sqlUpdate, [Username, Password, Fullname, Email, U_id], (error, result) => {
+    const sqlUpdate = "UPDATE user SET Status = 'admin' WHERE U_id = ?";
+    db.query(sqlUpdate, [U_id], (error, result) => {
         if (error) {
             console.log(error);
         }

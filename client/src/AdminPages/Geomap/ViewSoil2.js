@@ -436,7 +436,7 @@ export default function About() {
             value={user.Description}
           />
         </Grid>
-        <Link to="/dashboard">
+        <Link to="/geomap">
             <div className="btn btn-edit">Go Back</div>
         </Link>
         <ReactToPrint

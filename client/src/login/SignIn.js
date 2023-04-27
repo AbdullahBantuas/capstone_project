@@ -9,13 +9,11 @@ const initialState = {
   Password: "",
   Fullname: "",
   Email: "",
-  Username1: "",
-  Password1: "",
 };
 
 function SignIn() {
   const [state, setState] = useState(initialState);
-  const {Username, Password, Fullname, Email, Username1, Password1} = state;
+  const {Username, Password, Fullname, Email} = state;
   const navigate = useNavigate();
   // const {id} = useParams();
   const [isSignUp, setIsSignUp] = useState(false);
@@ -27,7 +25,7 @@ function SignIn() {
   const handleSignUp = (e) => {
     e.preventDefault();
     if(!Username || !Password || !Fullname || !Email) {
-      toast.success("Fill in both fields.")
+      alert("Fill in both fields.")
     } else {
         axios.post("http://localhost:5000/api/post", {
           Username,
@@ -38,31 +36,40 @@ function SignIn() {
       .then(() => {
           setState({Username: "", Password: "", Fullname: "", Email: ""});
       })
-      .catch((err) => toast.error(err.response.data));
-      toast.success("Data Added Successfully")
+      .catch((err) => alert(err.response.data));
+      alert("Sucessfully created an account!")
     }
   };
 
-  const handleSignIn = (e) => {
+  const handleLogin = (e) => {
     e.preventDefault();
-    if(!Username1 || !Password1) {
-      toast.success("Fill in both fields..")
+    if (!Username || !Password) {
+      alert("Please enter both username and password");
     } else {
-      axios.get("http://localhost:5000/api/admin", {
-        Username1,
-        Password1,
+      axios.post("http://localhost:5000/api/login", {
+        Username,
+        Password
       })
-      .then(() => {
-        setState({Username1: "", Password1: ""});
-        setTimeout(() => navigate("/dashboard"), 500);
-      })
-      .catch((err) => {
-        setState({ Username1: "", Password1: "" });
-        toast.error("Invalid username or password.");
-      });
-    }
-    
-  };
+        .then((response) => {
+          console.log(response.data.Status);
+          if (response.data.Login) {
+            if (response.data.Status === "admin") {
+              alert("Logged in as admin!");
+              navigate('/dashboard');
+            } else if (response.data.Status === "user") {
+              alert("Logged in as user!");
+              navigate('/userhome');
+            }
+          } else {
+            alert("No record...");
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          alert("Error logging in");
+        });
+    } 
+  }
 
   const handleInputChange = (e) => {
     const {name, value} = e.target;
@@ -115,25 +122,27 @@ function SignIn() {
         </form>
       </div>
       <div className="form-container sign-in-container">
-        <form className='form1' onSubmit={handleSignIn}>
+        <form className='form1' onSubmit={handleLogin}>
           <h1 className='h11'>LOGIN</h1>
           <input
             className='input1'
             type="text"
+            id="Username"
             placeholder="Username"
-            name="Username1"
-            value={Username1 || ""}
+            name="Username"
+            value={Username || ""}
             onChange={handleInputChange}
           />
           <input
             className='input1'
             type="password"
+            id="Password"
             placeholder="Password"
-            name="Password1"
-            value={Password1 || ""}
+            name="Password"
+            value={Password || ""}
             onChange={handleInputChange}
           />
-          <button className='button1' type="submit">LOGIN</button>
+          <button type='submit' className='button1'>LOGIN</button>
         </form>
       </div>
         <div className="overlay-container">
