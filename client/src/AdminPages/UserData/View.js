@@ -12,12 +12,12 @@ const View = () => {
         axios.get(`http://localhost:5000/api/get/${id}`).then((resp) => setUser({...resp.data[0]}))
     }, [id]);
     return (
-        <div style={{marginTop: "100px"}}>
-            <div className="card">
-                <div className="card-header">  
-                    <p>User Detail</p>
+        <div style={{marginTop: "200px"}}>
+            <div className="card1">
+                <div className="card-header1">  
+                    <p>USER DETAILS</p>
                 </div>
-                <div className="container">
+                <div className="containerView">
                     <strong>ID: </strong>
                     <span>{id}</span>
                     <br />

@@ -120,7 +120,7 @@ const AddEditSoil = () => {
   return (
     <div className="body">
         <div className="container">
-            <header className='header2'>ADD SOIL</header>
+            <header className='header2'>{id ? 'EDIT' : 'ADD'}</header>
             <form className='form2' action="#" onSubmit={handleSubmit}>
                 <div className="form first">
                     <div className="details personal">

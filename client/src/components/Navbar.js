@@ -1,10 +1,38 @@
 import React, { useState, useRef, useEffect } from 'react';
-import * as FaIcons from 'react-icons/fa';
-import * as AiIcons from 'react-icons/ai';
+import { FaBars, FaUserCircle } from 'react-icons/fa';
+import { AiOutlineClose } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
 import { SidebarData } from './SidebarData';
 import './Navbar.css';
 import { IconContext } from 'react-icons';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import LogoutIcon from '@mui/icons-material/Logout';
+
+function handleLogoutClick() {
+  const confirmed = window.confirm('Are you sure you want to logout?');
+  if (confirmed) {
+    window.location.href = '/';
+  }
+}
+
+function UserDropdown() {
+  return (
+    <div className="user-dropdown">
+      <span className='nav-title'>ADMIN</span>
+      <button>
+        <FaUserCircle />
+      </button>
+      <ul className="user-dropdown-menu" style={{ listStyle: 'none' }}>
+        <li>
+          <Link to="/update/"><AccountCircleIcon/>Profile</Link>
+        </li>
+        <li>
+          <Link onClick={handleLogoutClick}><LogoutIcon/>Logout</Link>
+        </li>
+      </ul>
+    </div>
+  );
+}
 
 function Navbar() {
   const [sidebar, setSidebar] = useState(false);
@@ -36,12 +64,13 @@ function Navbar() {
 
   return (
     <>
-      <IconContext.Provider value={{ color: '#fff' }}>
+      <IconContext.Provider value={{ color: '#fff'}}>
         <div ref={navbarRef} className='navbar'>
           <Link to='#' className='menu-bars'>
-            <FaIcons.FaBars onClick={showSidebar} style={{ marginLeft: '-20px' }}/>
+            <FaBars onClick={showSidebar} style={{ marginLeft: '-20px' }}/>
           </Link>
           <div className='nav-title'>GIS-Based Data Management For Soil Quality Index</div>
+          <UserDropdown />
         </div>
         <nav className={sidebar ? 'nav-menu active' : 'nav-menu'}>
           <ul
@@ -49,11 +78,6 @@ function Navbar() {
             className="nav-menu-items"
             onClick={showSidebar}
           >
-            {/* <li className='navbar-toggle'>
-              <Link to='#' className='menu-bars'>
-                <AiIcons.AiOutlineClose />
-              </Link>
-            </li> */}
             {SidebarData.map((item, index) => {
               return (
                 <li key={index} className={item.cName}>
@@ -72,3 +96,4 @@ function Navbar() {
 }
 
 export default Navbar;
+

@@ -59,17 +59,17 @@ const Navigation = React.memo(() => {
     return <Navbar />;
   } else if (location.pathname === '/addContact'){
     return <Navbar />;
-  } else if (location.pathname === '/update/:id'){
+  } else if (/\/update\/\d+/.test(location.pathname)){
     return <Navbar />;
-  } else if (location.pathname === '/view/:id'){
+  } else if (/\/view\/\d+/.test(location.pathname)){
     return <Navbar />;
   } else if (location.pathname === '/addSoil'){
     return <Navbar />;
-  } else if (location.pathname === '/updateSoil/:id'){
+  } else if (/\/updateSoil\/\d+/.test(location.pathname)){
     return <Navbar />;
-  } else if (location.pathname === '/viewSoil/:id'){
+  } else if (/\/viewSoil\/\d+/.test(location.pathname)){
     return <Navbar />;
-  } else if (location.pathname === '/viewSoil2/:id'){
+  } else if (/\/viewSoil2\/\d+/.test(location.pathname)) {
     return <Navbar />;
   } else if (location.pathname === '/researchers'){
     return <Navbar />;

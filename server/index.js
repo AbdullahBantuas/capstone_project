@@ -166,14 +166,14 @@ app.get("/api/soilCount", (req, res) => {
 });
 
 app.get("/api/userCount", (req, res) => {
-    const sqlGet = "SELECT COUNT(*) FROM user";
+    const sqlGet = "SELECT COUNT(*) FROM user WHERE Status = 'user'";
     db.query(sqlGet, (error, result) => {
         res.send(result);
     });
 });
 
 app.get("/api/adminCount", (req, res) => {
-    const sqlGet = "SELECT COUNT(*) FROM admin";
+    const sqlGet = "SELECT COUNT(*) FROM user WHERE Status = 'admin'";
     db.query(sqlGet, (error, result) => {
         res.send(result);
     });

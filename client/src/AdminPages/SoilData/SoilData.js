@@ -69,7 +69,7 @@ function SoilData() {
         <thead>
           <tr>
             <th style={{ textAlign: "center" }}>No.</th>
-            <th style={{ textAlign: "center" }}>Location</th>
+            <th style={{ textAlign: "center" }}>Location Name</th>
             <th style={{ textAlign: "center" }}>Soil Quality Index</th>
             <th style={{ textAlign: "center" }}>Action</th>
           </tr>

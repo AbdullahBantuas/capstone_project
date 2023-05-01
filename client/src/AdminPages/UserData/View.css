@@ -1,15 +1,15 @@
-.card {
+.card1 {
     width: 30%;
     display: flex;
     flex-direction: column;
-    border: 1px red solid;
+    border: 1px rgb(34, 66, 43) solid;
     align-content: center;
     margin: 0 auto;
 }
 
-.card-header {
+.card-header1 {
     height: 30%;
-    background: #5d6770;
+    background: #108f50;
     color: white;
     text-align: center;
 }
@@ -18,7 +18,8 @@
     font-size: 20px;
 }
 
-.container {
-    padding: 4px 16px;
+.containerView {
+    padding: 20px 16px;
     text-align: center;
+    direction: flex-start;
 }
