@@ -52,12 +52,12 @@ function SoilData() {
 
   return (
     <div className="soildata" style={{ marginTop: "115px" }}>
-      <div className="add-container">
+      <div className="add-container1">
         <Link to="/addSoil">
-            <button className="add"><AddLocationAltIcon /></button>
+            <button className="add1"><AddLocationAltIcon /></button>
         </Link>
       </div>
-      <div className="search-container">
+      <div className="search-container1">
         <input
           type="text"
           placeholder="Search by Location"

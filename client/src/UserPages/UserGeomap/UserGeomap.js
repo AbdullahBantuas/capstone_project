@@ -238,7 +238,7 @@ const MarkerContent = ({ position, draggable, onMarkerClick, onDragEnd, index, l
             <br />  
             <b></b>
             <br />
-            <button style={{ backgroundColor: "#008cba", cursor: 'pointer', display: 'inline-block', padding: '5px 8px', border: 'none', color: 'white', borderRadius:'5px' }} onClick={() => { window.location.href = `/viewSoil2/${s_id}` }}>View data</button>
+            <button style={{ backgroundColor: "#008cba", cursor: 'pointer', display: 'inline-block', padding: '5px 8px', border: 'none', color: 'white', borderRadius:'5px' }} onClick={() => { window.location.href = `/viewSoil3/${s_id}` }}>View data</button>
           </Popup>
         </Marker>
       );

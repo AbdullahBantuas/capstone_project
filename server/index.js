@@ -179,6 +179,27 @@ app.get("/api/adminCount", (req, res) => {
     });
 });
 
+app.get("/api/soilCountHigh", (req, res) => {
+    const sqlGet = "SELECT COUNT(*) FROM soil_properties WHERE SQI > '0.8'";
+    db.query(sqlGet, (error, result) => {
+        res.send(result);
+    });
+});
+
+app.get("/api/soilCountMed", (req, res) => {
+    const sqlGet = "SELECT COUNT(*) FROM soil_properties WHERE SQI <= '0.8' AND SQI >= '0.5'";
+    db.query(sqlGet, (error, result) => {
+        res.send(result);
+    });
+});
+
+app.get("/api/soilCountLow", (req, res) => {
+    const sqlGet = "SELECT COUNT(*) FROM soil_properties WHERE SQI < '0.5'";
+    db.query(sqlGet, (error, result) => {
+        res.send(result);
+    });
+});
+
 app.listen(5000, () => {
     console.log("Server is running on port 5000");
 })

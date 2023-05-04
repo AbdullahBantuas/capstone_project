@@ -23,7 +23,7 @@ export default function About() {
 
   return (
     <>
-      <RootStyle ref={componentRef}>
+      <RootStyle ref={componentRef} style={{minWidth: "800px"}}>
         <Link to="/geomap">
             <div className="btn btn-edit">Go Back</div>
         </Link>
@@ -439,7 +439,8 @@ export default function About() {
           <TextField
             multiline
             disabled
-            sx={{ bgcolor: "white", width: "130vh" }}
+            sx={{ bgcolor: "white" }}
+            fullWidth
             value={user.Description}
           />
         </Grid>

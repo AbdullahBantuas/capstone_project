@@ -55,7 +55,7 @@ function SignIn() {
           if (response.data.Login) {
             if (response.data.Status === "admin") {
               alert("Logged in as admin!");
-              navigate('/dashboard');
+              navigate('/home');
             } else if (response.data.Status === "user") {
               alert("Logged in as user!");
               navigate('/userhome');

@@ -3,6 +3,7 @@ import './App.css';
 import Navbar from './components/Navbar';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Dashboard from './AdminPages/Dashboard/Dashboard';
+import Home from './AdminPages/Home/Home';
 import SoilData from './AdminPages/SoilData/SoilData';
 import UserData from './AdminPages/UserData/UserData';
 import AddEdit from './AdminPages/UserData/AddEdit';
@@ -18,6 +19,8 @@ import UserHome from './UserPages/UserHome/UserHome';
 import UserGeomap from './UserPages/UserGeomap/UserGeomap';
 import UserSoil from './UserPages/UserSoil/UserSoil';
 import UserResearchers from './UserPages/UserResearchers/UserResearchers';
+import ViewSoil3 from './UserPages/UserGeomap/ViewSoil3';
+import ViewSoil4 from './UserPages/UserSoil/ViewSoil4';
 
 function App() {
   return (
@@ -25,6 +28,7 @@ function App() {
       <Navigation />
       <Routes>
         <Route path="/" exact element={<SignIn />} />
+        <Route path="/home" element={<Home />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/geomap" element={<Geomap />} />
         <Route path="/soildata" element={<SoilData />} />
@@ -41,6 +45,8 @@ function App() {
         <Route path="/usergeomap" element={<UserGeomap />} />
         <Route path="/usersoil" element={<UserSoil />} />
         <Route path="/userresearchers" element={<UserResearchers />} />
+        <Route path="/viewSoil3/:id" element={<ViewSoil3 />} />
+        <Route path="/viewSoil4/:id" element={<ViewSoil4 />} />
       </Routes>
     </Router>
   );
@@ -50,6 +56,8 @@ const Navigation = React.memo(() => {
   const location = useLocation();
       
   if (location.pathname === '/dashboard') {
+    return <Navbar />;
+  } else if (location.pathname === '/home'){
     return <Navbar />;
   } else if (location.pathname === '/geomap'){
     return <Navbar />;
@@ -80,6 +88,10 @@ const Navigation = React.memo(() => {
   } else if (location.pathname === '/usersoil'){
     return <UserNavbar />;
   } else if (location.pathname === '/userresearchers'){
+    return <UserNavbar />;
+  } else if (/\/viewSoil3\/\d+/.test(location.pathname)) {
+    return <UserNavbar />;
+  } else if (/\/viewSoil4\/\d+/.test(location.pathname)) {
     return <UserNavbar />;
   } else {
     return null;

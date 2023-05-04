@@ -2,12 +2,19 @@ import React from 'react';
 import { MdDashboard } from "react-icons/md";
 import { FiDatabase, FiUsers, FiMapPin } from "react-icons/fi";
 import { FaSistrix } from "react-icons/fa";
+import HomeIcon from '@mui/icons-material/Home';
 import yourLogo from '../imgs/5hz1_ve61_221010.jpg';
 export const SidebarData = [
   {
     icon: <img src={yourLogo} alt="Your Logo" style={{ marginLeft: '60px',width: '100px', height: 'auto' }} />,
     cName: 'nav-logo',
     logoStyle: { display: 'flex', justifyContent: 'center', alignItems: 'center' }
+  },
+  {
+    title: 'Home',
+    path: '/home',
+    icon: <HomeIcon />,
+    cName: 'nav-text'
   },
   {
     title: 'Dashboard',

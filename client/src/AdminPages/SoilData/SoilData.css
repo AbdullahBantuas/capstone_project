@@ -47,26 +47,26 @@
     cursor: pointer;
 }
 
-.add-container,
-.search-container {
+.add-container1,
+.search-container1 {
     display: inline-block;
     vertical-align: top;
 }
 
-.search-container {
+.search-container1 {
     justify-content: start;
     margin-top: -20px;
     margin-left: 10px;
     width: 20%;
 }
 
-.add-container {
+.add-container1 {
     justify-content: start;
     margin-top: -14px;
     margin-left: 830px;
 }
 
-.add {
+.add1 {
     margin-right: 8px;
     background-color: #008cba;
     border: none;

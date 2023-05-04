@@ -24,7 +24,7 @@ function UserDropdown() {
       </button>
       <ul className="user-dropdown-menu" style={{ listStyle: 'none' }}>
         <li>
-          <Link to="/update/"><AccountCircleIcon/>Profile</Link>
+          <Link to="/update/:id"><AccountCircleIcon/>Profile</Link>
         </li>
         <li>
           <Link onClick={handleLogoutClick}><LogoutIcon/>Logout</Link>
