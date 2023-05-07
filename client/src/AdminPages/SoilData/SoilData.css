@@ -55,20 +55,35 @@
 
 .search-container1 {
     justify-content: start;
-    margin-top: -20px;
+    margin-top: -10px;
     margin-left: 10px;
     width: 20%;
 }
 
 .add-container1 {
     justify-content: start;
-    margin-top: -14px;
-    margin-left: 830px;
+    margin-top: -5px;
+    margin-left: 787px;
 }
 
 .add1 {
     margin-right: 8px;
     background-color: #008cba;
+    border: none;
+    color: white;
+    padding: 5px 8px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    border-radius: 30px;
+    font-size: 15px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+.add2 {
+    margin-right: 8px;
+    background-color: #26b6e6;
     border: none;
     color: white;
     padding: 5px 8px;

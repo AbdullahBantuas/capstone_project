@@ -13,23 +13,28 @@ const initialState = {
 
 const AddEdit = () => {
     const [state, setState] = useState(initialState);
-
+    // const { U_id } = useParams();
     const {Username, Password, Fullname, Email} = state;
-
     const navigate = useNavigate();
-
-    const {id} = useParams();
+    const U_id = localStorage.getItem('U_id');
+    console.log(U_id);
 
     useEffect(() => {
-        axios.get(`http://localhost:5000/api/get/${id}`).then((resp) => setState({...resp.data[0]}))
-    }, [id]);
+        if (U_id) {
+            axios.get(`http://localhost:5000/api/get/${U_id}`).then((resp) => setState({...resp.data[0]}))
+        } else {
+            alert("User id not set!");
+        }
+    }, [U_id]);
+
+    console.log('state:', state);
 
     const handleSubmit = (e) => {
         e.preventDefault();
         if(!Username || !Password || !Fullname || !Email) {
             toast.error("Please provide value into each input field");
         } else {
-            if(!id) {
+            if(!U_id) {
                 axios.post("http://localhost:5000/api/post", {
                     Username,
                     Password,
@@ -42,7 +47,7 @@ const AddEdit = () => {
                 .catch((err) => toast.error(err.response.data));
                 toast.success("Data Added Successfully")
             } else {
-                axios.put(`http://localhost:5000/api/update/${id}`, {
+                axios.put(`http://localhost:5000/api/update2/${U_id}`, {
                     Username,
                     Password,
                     Fullname,
@@ -108,7 +113,7 @@ const AddEdit = () => {
             value={Email || ""}
             onChange={handleInputChange}
             />
-            <input type="submit" value={id ? "Update" : "Save"} />
+            <input type="submit" value={U_id ? "Update" : "Save"} />
             <Link to="/home">
                 <input type="button" value="Go Back" />
             </Link>

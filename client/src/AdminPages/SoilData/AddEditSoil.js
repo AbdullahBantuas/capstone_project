@@ -48,37 +48,44 @@ const AddEditSoil = () => {
             alert("Please provide value into each input field");
         } else {
             if(!id) {
-                axios.post(`http://localhost:5000/api/addsoil`, {
-                    Location_name, 
-                    Latitude, 
-                    Longitude,
-                    Description
-                })
-                axios.post(`http://localhost:5000/api/addsoil2`, {
-                    Bulk_density,
-                    Particle_density, 
-                    Void_ratio, 
-                    Porosity, 
-                    Moisture_content_mass, 
-                    Moisture_content_volume, 
-                    Water_holding_capacity, 
-                    Clay, 
-                    Silt, 
-                    Sand, 
-                    Soil_pH, 
-                    Total_nitrogen, 
-                    Extractable_phosphorus, 
-                    Exchangeable_potassium, 
-                    Cation_exchange_capacity, 
-                    Organic_matter, Earthworm_density, 
-                    SQI
-                })
-                .then(() => {
-                    setState({Location_name: "", Latitude: "", Longitude: "", Description: "", Bulk_density: "", Particle_density: "", Void_ratio: "", Porosity: "", Moisture_content_mass: "", Moisture_content_volume: "", Water_holding_capacity: "", Clay: "", Silt: "", Sand: "", Soil_pH: "", Total_nitrogen: "", Extractable_phosphorus: "", Exchangeable_potassium: "", Cation_exchange_capacity: "", Organic_matter, Earthworm_density: "", SQI: ""});
+                axios
+                    .get(`http://localhost:5000/api/checksoil?Location_name=${Location_name}&Latitude=${Latitude}&Longitude=${Longitude}`)
+                    .then(response => {
+                    console.log(response.data);
+                    if (response.data.length > 0) {
+                        alert("Data already exist");
+                    } else {
+                        axios.post(`http://localhost:5000/api/addsoil`, {
+                            Location_name,
+                            Latitude,
+                            Longitude,
+                            Description
+                        });
+                        axios.post(`http://localhost:5000/api/addsoil2`, {
+                            Bulk_density,
+                            Particle_density,
+                            Void_ratio,
+                            Porosity,
+                            Moisture_content_mass,
+                            Moisture_content_volume,
+                            Water_holding_capacity,
+                            Clay,
+                            Silt,
+                            Sand,
+                            Soil_pH,
+                            Total_nitrogen,
+                            Extractable_phosphorus,
+                            Exchangeable_potassium,
+                            Cation_exchange_capacity,
+                            Organic_matter,
+                            Earthworm_density,
+                            SQI
+                        });
+                        alert("Data added successfully");
+                        setTimeout(() => navigate("/soildata"), 500);
+                    }
                 })
                 .catch((err) => toast.error(err.response.data));
-                alert("Data Added Successfully")
-                setTimeout(() => navigate("/soildata"), 500);
             } else {
                 axios.put(`http://localhost:5000/api/updatesoil/${id}`, {
                     Location_name, 

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { toast, ToastContainer } from "react-toastify";
 import { Link } from "react-router-dom";
 import "./SoilData.css";
 import axios from "axios";
@@ -7,6 +6,7 @@ import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 
 function SoilData() {
   const [data, setData] = useState([]);
@@ -16,6 +16,7 @@ function SoilData() {
   const [totalItems, setTotalItems] = useState(0);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const [file, setFile] = useState(null);
   
   const loadData = async () => {
     const response = await axios.get("http://localhost:5000/api/soil");
@@ -50,11 +51,54 @@ function SoilData() {
 
   const currentData = filteredData.slice(indexOfFirstItem, indexOfLastItem);
 
+  function handleImportClick() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.csv';
+    input.onchange = handleFileSelect;
+    input.click();
+  }
+  
+  function handleFileSelect(event) {
+    const file = event.target.files[0];
+    const formData = new FormData();
+    formData.append('file', file);
+  
+    fetch('http://localhost:5000/upload1', {
+      method: 'POST',
+      body: formData,
+    })
+      .then((response) => response.text())
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  
+    fetch('http://localhost:5000/upload2', {
+      method: 'POST',
+      body: formData,
+    })
+      .then((response) => response.text())
+      .then((result) => {
+        console.log(result);
+        alert("Import successful");
+        setTimeout(() => loadData(), 500);
+      })
+      .catch((error) => {
+        console.error(error);
+        alert("Import failed");
+      });
+  }
+
   return (
     <div className="soildata" style={{ marginTop: "115px" }}>
       <div className="add-container1">
+        <input type="file" accept=".csv" onChange={handleFileSelect} style={{ display: 'none' }} />
+        <button className="add2" onClick={handleImportClick} title="Import Data"><CreateNewFolderIcon/></button>
         <Link to="/addSoil">
-            <button className="add1"><AddLocationAltIcon /></button>
+            <button className="add1" title="Add soil"><AddLocationAltIcon /></button>
         </Link>
       </div>
       <div className="search-container1">
@@ -84,16 +128,17 @@ function SoilData() {
                 <td>
                   <div className="btn-group">
                     <Link to={`/updateSoil/${item.S_id}`}>
-                      <button className="btn btn-edit"><EditIcon/></button>
+                      <button className="btn btn-edit" title="Edit soil"><EditIcon/></button>
                     </Link>
                     <button
                       className="btn btn-delete"
                       onClick={() => deleteContact(item.S_id)}
+                      title="Delete soil"
                     >
                       <DeleteIcon/>
                     </button>
                     <Link to={`/viewSoil/${item.S_id}`}>
-                      <button className="btn btn-view"><VisibilityIcon/></button>
+                      <button className="btn btn-view" title="View details"><VisibilityIcon/></button>
                     </Link>
                   </div>
                 </td>

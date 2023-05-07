@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 const slideStyles = {
-  marginTop: "90px",
+  marginTop: "40px",
   width: "100%",
   height: "100%",
   borderRadius: "10px",
@@ -45,6 +45,7 @@ const dotStyle = {
   margin: "0 3px",
   cursor: "pointer",
   fontSize: "20px",
+  color: "#008000",
 };
 
 const ImageSlider = ({ slides }) => {

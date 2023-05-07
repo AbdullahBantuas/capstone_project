@@ -18,7 +18,7 @@ function handleLogoutClick() {
 function UserDropdown() {
   return (
     <div className="user-dropdown">
-      <span className='nav-title'>USER</span>
+      {/* <span className='nav-title'>USER</span> */}
       <button>
         <FaUserCircle />
       </button>

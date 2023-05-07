@@ -34,7 +34,7 @@ function App() {
         <Route path="/soildata" element={<SoilData />} />
         <Route path="/userdata" element={<UserData />} />
         <Route path="/addContact" element={<AddEdit />} />
-        <Route path="/update/:id" element={<AddEdit />} />
+        <Route path="/update" element={<AddEdit />} />
         <Route path="/view/:id" element={<View />} />
         <Route path="/addSoil" element={<AddEditSoil />} />
         <Route path="/updateSoil/:id" element={<AddEditSoil />} />
@@ -67,7 +67,7 @@ const Navigation = React.memo(() => {
     return <Navbar />;
   } else if (location.pathname === '/addContact'){
     return <Navbar />;
-  } else if (/\/update\/\d+/.test(location.pathname)){
+  } else if (location.pathname === '/update'){
     return <Navbar />;
   } else if (/\/view\/\d+/.test(location.pathname)){
     return <Navbar />;

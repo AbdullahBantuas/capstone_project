@@ -3,6 +3,20 @@ const app = express();
 const bodyParser = require("body-parser");
 const mysql = require("mysql2");
 const cors = require("cors");
+const csv = require('csv-parser');
+const multer = require('multer');
+const fs = require('fs');
+
+const storage = multer.diskStorage({
+    destination: (req, file, callback) => {
+      callback(null, './uploads');
+    },
+    filename: (req, file, callback) => {
+      callback(null, file.originalname);
+    },
+  });
+  
+const upload = multer({ storage: storage });
 
 const db = mysql.createPool({
     host: "localhost",
@@ -31,7 +45,8 @@ app.post("/api/login", (req, res) => {
             const user = result[0];
             return res.json({
                 Login: true,
-                Status: user.Status
+                Status: user.Status,
+                U_id: user.U_id
             })
         } else {
             return res.json({Login: false})
@@ -67,6 +82,19 @@ app.get("/api/get/:U_id", (req, res) => {
             console.log(error);
         }
         res.send(result);
+    });
+});
+
+app.put("/api/update2/:U_id", (req, res) => {
+    const { U_id } = req.params;
+    const { Username, Password, Fullname, Email } = req.body;
+    const sqlUpdate = "UPDATE user SET Username = ?, Password = ?, Fullname = ?, Email = ? WHERE U_id = ?";
+    db.query(sqlUpdate, [Username, Password, Fullname, Email, U_id], (error, result) => {
+        if (error) {
+            console.log(error);
+            return res.status(500).json({ message: "Error updating user data" });
+        }
+        res.json({ message: "User data updated successfully" });
     });
 });
 
@@ -108,6 +136,61 @@ app.post("/api/addsoil2", (req, res) => {
     });
 });
 
+app.post('/upload1', upload.single('file'), (req, res) => {
+    const filePath = req.file.path;
+    const results = [];
+  
+    fs.createReadStream(filePath)
+      .pipe(csv({ mapHeaders: ({ header }) => header.trim() }))
+      .on('data', (data) => {
+        if (data.Location_name) {
+          data.Location_name = data.Location_name.replace(/^"(.+(?="$))"$/, '$1');
+        }
+        results.push(data);
+      })
+      .on('end', () => {
+        const query = 'INSERT INTO soil_information (Location_name, Latitude, Longitude, Description) VALUES (?, ?, ?, ?)';
+  
+        results.forEach((result) => {
+          db.query(query, [result.Location_name, result.Latitude, result.Longitude, result.Description], (error, rows) => {
+            if (error) {
+              console.log(error);
+            } else {
+              console.log('Inserted row into table1:');
+            }
+          });
+        });
+  
+        res.send('Import successful');
+      });
+  });
+
+  app.post('/upload2', upload.single('file'), (req, res) => {
+    const filePath = req.file.path;
+    const results = [];
+  
+    fs.createReadStream(filePath)
+      .pipe(csv({ mapHeaders: ({ header }) => header.trim() }))
+      .on('data', (data) => {
+        results.push(data);
+      })
+      .on('end', () => {
+        const query = 'INSERT INTO soil_properties (Bulk_density, Particle_density, Void_ratio, Porosity, Moisture_content_mass, Moisture_content_volume, Water_holding_capacity, Clay, Silt, Sand, Soil_pH, Total_nitrogen, Extractable_phosphorus, Exchangeable_potassium, Cation_exchange_capacity, Organic_matter, Earthworm_density, SQI) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+  
+        results.forEach((result) => {
+          db.query(query, [result.Bulk_density, result.Particle_density, result.Void_ratio, result.Porosity, result.Moisture_content_mass, result.Moisture_content_volume, result.Water_holding_capacity, result.Clay, result.Silt, result.Sand, result.Soil_pH, result.Total_nitrogen, result.Extractable_phosphorus, result.Exchangeable_potassium, result.Cation_exchange_capacity, result.Organic_matter, result.Earthworm_density, result.SQI], (error, rows) => {
+            if (error) {
+              console.log(error);
+            } else {
+              console.log('Inserted row into table2:');
+            }
+          });
+        });
+  
+        res.send('Import successful');
+      });
+  });  
+  
 app.get("/api/soil/:S_id", (req, res) => {
     const { S_id } = req.params;
     const sqlGet = "SELECT * FROM soil_information a, soil_properties b WHERE a.S_id = ? AND a.S_id = b.S_id";
@@ -199,6 +282,22 @@ app.get("/api/soilCountLow", (req, res) => {
         res.send(result);
     });
 });
+
+app.get('/api/checksoil', (req, res) => {
+    const { Location_name, Latitude, Longitude } = req.query;
+    const query = `SELECT * FROM soil_information WHERE Location_name = '${Location_name}' AND Latitude = '${Latitude}' AND Longitude = '${Longitude}'`;
+    db.query(query, (err, rows, fields) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send('Error fetching data from database');
+      } else if (rows.length > 0) {
+        res.status(400).send('Data already exists');
+      } else {
+        res.send('Data does not exist');
+      }
+    });
+  });
+  
 
 app.listen(5000, () => {
     console.log("Server is running on port 5000");

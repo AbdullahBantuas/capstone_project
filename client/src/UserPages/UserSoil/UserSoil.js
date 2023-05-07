@@ -78,7 +78,7 @@ function SoilData() {
                 <td>{item.SQI}</td>
                 <td>
                     <Link to={`/viewSoil4/${item.S_id}`}>
-                      <button className="btn btn-view"><VisibilityIcon/></button>
+                      <button className="btn btn-view" title="View soil"><VisibilityIcon/></button>
                     </Link>
                 </td>
               </tr>

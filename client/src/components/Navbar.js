@@ -18,13 +18,13 @@ function handleLogoutClick() {
 function UserDropdown() {
   return (
     <div className="user-dropdown">
-      <span className='nav-title'>ADMIN</span>
+      {/* <span className='nav-title'>ADMIN</span> */}
       <button>
         <FaUserCircle />
       </button>
       <ul className="user-dropdown-menu" style={{ listStyle: 'none' }}>
         <li>
-          <Link to="/update/:id"><AccountCircleIcon/>Profile</Link>
+          <Link to="/update"><AccountCircleIcon/>Profile</Link>
         </li>
         <li>
           <Link onClick={handleLogoutClick}><LogoutIcon/>Logout</Link>

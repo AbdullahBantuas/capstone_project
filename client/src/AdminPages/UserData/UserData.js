@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { toast, ToastContainer } from "react-toastify";
 import { Link } from "react-router-dom";
 import "./UserData.css";
 import axios from "axios";
-import EditIcon from '@mui/icons-material/Edit';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 
@@ -59,7 +58,7 @@ function UserData() {
   return (
     
     <div className="userdata" style={{ marginTop: "115px" }}>
-      <div style={{ justifyContent: 'start', marginTop: '-20px', marginLeft: '885px', width: '20%' }}>
+      <div style={{ justifyContent: 'start', marginTop: '-10px', marginLeft: '885px', width: '20%' }}>
         <input
           type="text"
           placeholder="Search by Fullname"
@@ -87,18 +86,20 @@ function UserData() {
                   <div className="btn-group">
                     <button
                       className="btn btn-edit"
+                      title="Set to admin"
                       onClick={() => updateContact(item.U_id)}
                     >
-                      <EditIcon/>
+                      <AdminPanelSettingsIcon/>
                     </button>
                     <button
                       className="btn btn-delete"
                       onClick={() => deleteContact(item.U_id)}
+                      title="Delete user"
                     >
                       <DeleteIcon/>
                     </button>
                     <Link to={`/view/${item.U_id}`}>
-                      <button className="btn btn-view"><VisibilityIcon/></button>
+                      <button className="btn btn-view" title="View details"><VisibilityIcon/></button>
                     </Link>
                   </div>
                 </td>

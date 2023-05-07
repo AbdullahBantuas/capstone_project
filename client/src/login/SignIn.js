@@ -54,14 +54,16 @@ function SignIn() {
           console.log(response.data.Status);
           if (response.data.Login) {
             if (response.data.Status === "admin") {
-              alert("Logged in as admin!");
+              localStorage.setItem('U_id', response.data.U_id);
               navigate('/home');
+              alert("Logged in as admin!");
             } else if (response.data.Status === "user") {
-              alert("Logged in as user!");
+              localStorage.setItem('U_id', response.data.U_id);
               navigate('/userhome');
+              alert("Logged in as user!");
             }
           } else {
-            alert("No record...");
+            alert("Invalid username or password");
           }
         })
         .catch((err) => {

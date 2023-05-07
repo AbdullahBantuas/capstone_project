@@ -15,11 +15,11 @@ const Home = () => {
     margin: "0 auto",
   };
   return (
-    <div className="body1">
+    <body className="body1">
     <div style={containerStyles}>
       <ImageSlider slides={slides} />
     </div>
-    </div>
+    </body>
   );
 };
 
