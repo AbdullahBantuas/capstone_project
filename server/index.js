@@ -117,26 +117,29 @@ app.get("/api/soil", (req, res) => {
 });
 
 app.post("/api/addsoil", (req, res) => {
-    const { Location_name, Latitude, Longitude, Description } = req.body;
-    const sqlInsert = "INSERT INTO soil_information (Location_name, Latitude, Longitude, Description) VALUES (?, ?, ?, ?);";
-    db.query(sqlInsert, [Location_name, Latitude, Longitude, Description], (error, result) => {
-        if (error) {
+    const { Location_name, Latitude, Longitude, Description, Bulk_density, Particle_density, Void_ratio, Porosity, Moisture_content_mass, Moisture_content_volume, Water_holding_capacity, Clay, Silt, Sand, Soil_pH, Total_nitrogen, Extractable_phosphorus, Exchangeable_potassium, Cation_exchange_capacity, Organic_matter, Earthworm_density, SQI } = req.body;
+  
+    const sqlInsertSoilInfo = "INSERT INTO soil_information (Location_name, Latitude, Longitude, Description) VALUES (?, ?, ?, ?);";
+    db.query(sqlInsertSoilInfo, [Location_name, Latitude, Longitude, Description], (error, result) => {
+      if (error) {
+        console.log(error);
+        res.sendStatus(500);
+      } else {
+        const S_id = result.insertId;
+        const sqlInsertSoilProps = "INSERT INTO soil_properties (S_id, Bulk_density, Particle_density, Void_ratio, Porosity, Moisture_content_mass, Moisture_content_volume, Water_holding_capacity, Clay, Silt, Sand, Soil_pH, Total_nitrogen, Extractable_phosphorus, Exchangeable_potassium, Cation_exchange_capacity, Organic_matter, Earthworm_density, SQI) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        db.query(sqlInsertSoilProps, [S_id, Bulk_density, Particle_density, Void_ratio, Porosity, Moisture_content_mass, Moisture_content_volume, Water_holding_capacity, Clay, Silt, Sand, Soil_pH, Total_nitrogen, Extractable_phosphorus, Exchangeable_potassium, Cation_exchange_capacity, Organic_matter, Earthworm_density, SQI], (error, result) => {
+          if (error) {
             console.log(error);
-        }
+            res.sendStatus(500);
+          } else {
+            res.sendStatus(200);
+          }
+        });
+      }
     });
-});
-
-app.post("/api/addsoil2", (req, res) => {
-    const { Bulk_density, Particle_density, Void_ratio, Porosity, Moisture_content_mass, Moisture_content_volume, Water_holding_capacity, Clay, Silt, Sand, Soil_pH, Total_nitrogen, Extractable_phosphorus, Exchangeable_potassium, Cation_exchange_capacity, Organic_matter, Earthworm_density, SQI } = req.body;
-    const sqlInsert = "INSERT INTO soil_properties (Bulk_density, Particle_density, Void_ratio, Porosity, Moisture_content_mass, Moisture_content_volume, Water_holding_capacity, Clay, Silt, Sand, Soil_pH, Total_nitrogen, Extractable_phosphorus, Exchangeable_potassium, Cation_exchange_capacity, Organic_matter, Earthworm_density, SQI) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    db.query(sqlInsert, [Bulk_density, Particle_density, Void_ratio, Porosity, Moisture_content_mass, Moisture_content_volume, Water_holding_capacity, Clay, Silt, Sand, Soil_pH, Total_nitrogen, Extractable_phosphorus, Exchangeable_potassium, Cation_exchange_capacity, Organic_matter, Earthworm_density, SQI], (error, result) => {
-        if (error) {
-            console.log(error);
-        }
-    });
-});
-
-app.post('/upload1', upload.single('file'), (req, res) => {
+  });
+  
+app.post('/upload', upload.single('file'), (req, res) => {
     const filePath = req.file.path;
     const results = [];
   
@@ -149,47 +152,57 @@ app.post('/upload1', upload.single('file'), (req, res) => {
         results.push(data);
       })
       .on('end', () => {
-        const query = 'INSERT INTO soil_information (Location_name, Latitude, Longitude, Description) VALUES (?, ?, ?, ?)';
+        const query1 = 'INSERT INTO soil_information (Location_name, Latitude, Longitude, Description) VALUES (?, ?, ?, ?)';
+        const query2 = 'INSERT INTO soil_properties (S_id, Bulk_density, Particle_density, Void_ratio, Porosity, Moisture_content_mass, Moisture_content_volume, Water_holding_capacity, Clay, Silt, Sand, Soil_pH, Total_nitrogen, Extractable_phosphorus, Exchangeable_potassium, Cation_exchange_capacity, Organic_matter, Earthworm_density, SQI) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
   
         results.forEach((result) => {
-          db.query(query, [result.Location_name, result.Latitude, result.Longitude, result.Description], (error, rows) => {
-            if (error) {
-              console.log(error);
-            } else {
-              console.log('Inserted row into table1:');
-            }
-          });
+            db.query(query1, [result.Location_name, result.Latitude, result.Longitude, result.Description], (error, result1) => {
+                if (error) {
+                  console.log(error);
+                } else {
+                  console.log('Inserted row into soil_information table:');
+                  const S_id = result1.insertId;
+                  
+                  db.query(query2, [S_id, result.Bulk_density, result.Particle_density, result.Void_ratio, result.Porosity, result.Moisture_content_mass, result.Moisture_content_volume, result.Water_holding_capacity, result.Clay, result.Silt, result.Sand, result.Soil_pH, result.Total_nitrogen, result.Extractable_phosphorus, result.Exchangeable_potassium, result.Cation_exchange_capacity, result.Organic_matter, result.Earthworm_density, result.SQI], (error, result2) => {
+                    if (error) {
+                      console.log(error);
+                    } else {
+                      console.log('Inserted row into soil_properties table:');
+                    }
+                  });
+                }
+              });
         });
   
         res.send('Import successful');
       });
   });
 
-  app.post('/upload2', upload.single('file'), (req, res) => {
-    const filePath = req.file.path;
-    const results = [];
+// app.post('/upload2', upload.single('file'), (req, res) => {
+//     const filePath = req.file.path;
+//     const results = [];
   
-    fs.createReadStream(filePath)
-      .pipe(csv({ mapHeaders: ({ header }) => header.trim() }))
-      .on('data', (data) => {
-        results.push(data);
-      })
-      .on('end', () => {
-        const query = 'INSERT INTO soil_properties (Bulk_density, Particle_density, Void_ratio, Porosity, Moisture_content_mass, Moisture_content_volume, Water_holding_capacity, Clay, Silt, Sand, Soil_pH, Total_nitrogen, Extractable_phosphorus, Exchangeable_potassium, Cation_exchange_capacity, Organic_matter, Earthworm_density, SQI) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+//     fs.createReadStream(filePath)
+//       .pipe(csv({ mapHeaders: ({ header }) => header.trim() }))
+//       .on('data', (data) => {
+//         results.push(data);
+//       })
+//       .on('end', () => {
+//         const query = 'INSERT INTO soil_properties (Bulk_density, Particle_density, Void_ratio, Porosity, Moisture_content_mass, Moisture_content_volume, Water_holding_capacity, Clay, Silt, Sand, Soil_pH, Total_nitrogen, Extractable_phosphorus, Exchangeable_potassium, Cation_exchange_capacity, Organic_matter, Earthworm_density, SQI) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
   
-        results.forEach((result) => {
-          db.query(query, [result.Bulk_density, result.Particle_density, result.Void_ratio, result.Porosity, result.Moisture_content_mass, result.Moisture_content_volume, result.Water_holding_capacity, result.Clay, result.Silt, result.Sand, result.Soil_pH, result.Total_nitrogen, result.Extractable_phosphorus, result.Exchangeable_potassium, result.Cation_exchange_capacity, result.Organic_matter, result.Earthworm_density, result.SQI], (error, rows) => {
-            if (error) {
-              console.log(error);
-            } else {
-              console.log('Inserted row into table2:');
-            }
-          });
-        });
+//         results.forEach((result) => {
+//           db.query(query, [result.Bulk_density, result.Particle_density, result.Void_ratio, result.Porosity, result.Moisture_content_mass, result.Moisture_content_volume, result.Water_holding_capacity, result.Clay, result.Silt, result.Sand, result.Soil_pH, result.Total_nitrogen, result.Extractable_phosphorus, result.Exchangeable_potassium, result.Cation_exchange_capacity, result.Organic_matter, result.Earthworm_density, result.SQI], (error, rows) => {
+//             if (error) {
+//               console.log(error);
+//             } else {
+//               console.log('Inserted row into table2:');
+//             }
+//           });
+//         });
   
-        res.send('Import successful');
-      });
-  });  
+//         res.send('Import successful');
+//       });
+//   });  
   
 app.get("/api/soil/:S_id", (req, res) => {
     const { S_id } = req.params;
@@ -281,23 +294,7 @@ app.get("/api/soilCountLow", (req, res) => {
     db.query(sqlGet, (error, result) => {
         res.send(result);
     });
-});
-
-app.get('/api/checksoil', (req, res) => {
-    const { Location_name, Latitude, Longitude } = req.query;
-    const query = `SELECT * FROM soil_information WHERE Location_name = '${Location_name}' AND Latitude = '${Latitude}' AND Longitude = '${Longitude}'`;
-    db.query(query, (err, rows, fields) => {
-      if (err) {
-        console.error(err);
-        res.status(500).send('Error fetching data from database');
-      } else if (rows.length > 0) {
-        res.status(400).send('Data already exists');
-      } else {
-        res.send('Data does not exist');
-      }
-    });
-  });
-  
+}); 
 
 app.listen(5000, () => {
     console.log("Server is running on port 5000");

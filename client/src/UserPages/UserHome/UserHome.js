@@ -1,4 +1,5 @@
 import ImageSlider from "./ImageSlide2";
+import "./UserHome.css";
 
 const UserHome = () => {
   const slides = [

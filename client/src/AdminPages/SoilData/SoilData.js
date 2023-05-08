@@ -64,19 +64,7 @@ function SoilData() {
     const formData = new FormData();
     formData.append('file', file);
   
-    fetch('http://localhost:5000/upload1', {
-      method: 'POST',
-      body: formData,
-    })
-      .then((response) => response.text())
-      .then((result) => {
-        console.log(result);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  
-    fetch('http://localhost:5000/upload2', {
+    fetch('http://localhost:5000/upload', {
       method: 'POST',
       body: formData,
     })
@@ -96,7 +84,7 @@ function SoilData() {
     <div className="soildata" style={{ marginTop: "115px" }}>
       <div className="add-container1">
         <input type="file" accept=".csv" onChange={handleFileSelect} style={{ display: 'none' }} />
-        <button className="add2" onClick={handleImportClick} title="Import Data"><CreateNewFolderIcon/></button>
+        <button className="add2" onClick={handleImportClick} title="Import soil"><CreateNewFolderIcon/></button>
         <Link to="/addSoil">
             <button className="add1" title="Add soil"><AddLocationAltIcon /></button>
         </Link>

@@ -35,9 +35,11 @@ function SignIn() {
       })
       .then(() => {
           setState({Username: "", Password: "", Fullname: "", Email: ""});
-      })
-      .catch((err) => alert(err.response.data));
-      alert("Sucessfully created an account!")
+          alert("Sucessfully created an account!")
+      }).catch((err) => {
+        console.error(err);
+        alert("Error: username or gmail already exist");
+        });
     }
   };
 
