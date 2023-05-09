@@ -1,0 +1,41 @@
+.Retitle {
+    text-align: center;
+}
+
+.Recontainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 100px;
+    align-items: center;
+    justify-content: center;
+}
+
+.testimonial {
+    background-color: rgb(231, 232, 234);
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.row :hover {
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+}
+
+.Rename {
+    font-size: 15px;
+}
+
+.Rename1 {
+    font-size: 13px;
+}
+
+.image1 {
+    border-radius: 50%;
+}

@@ -50,7 +50,7 @@ const MapComponent = () => {
   const zoom = 13.5;
   const containerStyle = {
     position: 'absolute',
-    top: '70px',
+    top: '60px',
     left: 0,
     right: 0,
     bottom: 0,

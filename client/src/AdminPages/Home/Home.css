@@ -1,8 +1,8 @@
 body {
-    background-color: rgb(231, 232, 234);
+    background-color: rgb(152, 153, 156);
 }
 
-.body1 {
+body#body1 {
     background-image: url('../../imgs/image.jpg');
     display: flex;
     justify-content: center;
@@ -12,6 +12,4 @@ body {
     width: 100vw;
     margin: -20px -8px 0;
     background-size: cover;
-    /* margin-top: 70px; */
-    /* height: calc(100vh + 4.0px); */
 }

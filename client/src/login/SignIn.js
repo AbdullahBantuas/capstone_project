@@ -36,6 +36,8 @@ function SignIn() {
       .then(() => {
           setState({Username: "", Password: "", Fullname: "", Email: ""});
           alert("Sucessfully created an account!")
+          navigate('/');
+          navigate(handleSignUp);
       }).catch((err) => {
         console.error(err);
         alert("Error: username or gmail already exist");
@@ -122,7 +124,7 @@ function SignIn() {
             value={Email || ""}
             onChange={handleInputChange}
             />
-          <button className='button1' onClick={handleSwitch} type="submit">SUBMIT</button>
+          <button className='button1' type="submit">SUBMIT</button>
         </form>
       </div>
       <div className="form-container sign-in-container">

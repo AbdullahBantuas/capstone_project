@@ -60,7 +60,10 @@ app.post("/api/post", (req, res) => {
     db.query(sqlInsert, [Username, Password, Fullname, Email], (error, result) => {
         if (error) {
             console.log(error);
-        }
+            res.sendStatus(500);
+          } else {
+            res.sendStatus(200);
+          }
     });
 });
 

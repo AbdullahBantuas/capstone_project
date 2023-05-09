@@ -243,3 +243,17 @@
     background-size: cover;
     height: calc(100vh + 4.0px);
 }
+
+.input-container {
+    position: relative;
+}
+
+.show-password-button {
+    position: absolute;
+    top: 50%;
+    right: 5px;
+    transform: translateY(-50%);
+    border: none;
+    background: none;
+    cursor: pointer;
+}

@@ -34,33 +34,16 @@ const AddEdit = () => {
         if(!Username || !Password || !Fullname || !Email) {
             toast.error("Please provide value into each input field");
         } else {
-            if(!U_id) {
-                axios.post("http://localhost:5000/api/post", {
-                    Username,
-                    Password,
-                    Fullname,
-                    Email
-                })
-                .then(() => {
-                    setState({Username: "", Password: "", Fullname: "", Email: ""});
-                })
-                .catch((err) => toast.error(err.response.data));
-                toast.success("Data Added Successfully")
-            } else {
-                axios.put(`http://localhost:5000/api/update2/${U_id}`, {
-                    Username,
-                    Password,
-                    Fullname,
-                    Email
-                })
-                .then(() => {
-                    setState({Username: "", Password: "", Fullname: "", Email: ""});
-                })
-                .catch((err) => toast.error(err.response.data));
-                toast.success("Data Updated Successfully")
-            }
-            
-            setTimeout(() => navigate("/userdata"), 500);
+            axios.put(`http://localhost:5000/api/update2/${U_id}`, {
+                Username,
+                Password,
+                Fullname,
+                Email
+            })
+            .then(() => {
+                alert("Updated Successfully")
+            })
+            .catch((err) => toast.error(err.response.data));
         }
     };
     const handleInputChange = (e) => {
@@ -68,7 +51,7 @@ const AddEdit = () => {
         setState({...state, [name]: value});
     };
   return (
-    <div style={{marginTop: "100px"}}>
+    <div style={{marginTop: "150px"}}>
         <form style={{
             margin: "auto",
             padding: "15px",
@@ -114,9 +97,9 @@ const AddEdit = () => {
             onChange={handleInputChange}
             />
             <input type="submit" value={U_id ? "Update" : "Save"} />
-            <Link to="/home">
+            {/* <Link to="/home">
                 <input type="button" value="Go Back" />
-            </Link>
+            </Link> */}
         </form>
     </div>
   )

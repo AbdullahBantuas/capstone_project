@@ -12,7 +12,7 @@ function SoilData() {
   const [data, setData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(3);
+  const [itemsPerPage, setItemsPerPage] = useState(4);
   const [totalItems, setTotalItems] = useState(0);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -134,7 +134,7 @@ function SoilData() {
             );
           })}
         </tbody>
-        <tfoot>
+        <tfoot className="tablefoot">
           <Pagination
             itemsPerPage={itemsPerPage}
             totalItems={totalItems}
@@ -162,7 +162,7 @@ function SoilData() {
         {pageNumber}
         </button>
         ))}
-        {pageNumbers.length > 3 && currentPage < pageNumbers.length && (
+        {pageNumbers.length > 2 && currentPage < pageNumbers.length && (
           <button onClick={() => onPageChange(currentPage + 1)}>Next</button>
         )}
       </div>

@@ -5,7 +5,7 @@ import { FaSistrix } from "react-icons/fa";
 import yourLogo from '../imgs/5hz1_ve61_221010.jpg';
 export const SidebarData = [
   {
-    icon: <img src={yourLogo} alt="Your Logo" style={{ marginLeft: '60px',width: '100px', height: 'auto' }} />,
+    icon: <img src={yourLogo} alt="Your Logo" style={{ marginLeft: '60px',width: '100px', height: '100px', paddingBottom: '20px' }} />,
     cName: 'nav-logo',
     logoStyle: { display: 'flex', justifyContent: 'center', alignItems: 'center' }
   },

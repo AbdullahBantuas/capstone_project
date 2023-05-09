@@ -15,7 +15,7 @@ const Home = () => {
     margin: "0 auto",
   };
   return (
-    <body className="body1">
+    <body id="body1">
     <div style={containerStyles}>
       <ImageSlider slides={slides} />
     </div>

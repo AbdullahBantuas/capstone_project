@@ -2,7 +2,7 @@
     background-color: #108f50;
     top: 0;
     left: 0;
-    height: 70px;
+    height: 60px;
     display: flex;
     justify-content: start;
     align-items: center;
@@ -103,7 +103,7 @@ span {
     cursor: pointer;
     font-size: 2.5rem;
     margin-left: 8px;
-    margin-top: 12px;
+    margin-top: 8px;
 }
 
 
