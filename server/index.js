@@ -6,6 +6,8 @@ const cors = require("cors");
 const csv = require('csv-parser');
 const multer = require('multer');
 const fs = require('fs');
+const crypto = require("crypto");   
+const nodemailer = require("nodemailer");
 
 const storage = multer.diskStorage({
     destination: (req, file, callback) => {
@@ -25,12 +27,41 @@ const db = mysql.createPool({
     database: "soil_quality_index"
 });
 
+const transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false, // Use SSL/TLS if true
+    auth: {
+      user: "skullpuncher1011@gmail.com",
+      pass: "pxoxqeredxyhwadt",
+    },
+  });
+
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+function sendVerificationEmail(toEmail, verificationToken) {
+  // Compose the email message
+  const mailOptions = {
+    from: "skullpuncher1011@gmail.com",
+    to: toEmail,
+    subject: "Account Verification",
+    text: `Please click the following link to verify your account: http://localhost:5000/verify/${verificationToken}`,
+  };
+
+  // Send the email
+transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log("Error sending verification email:", error);
+    } else {
+      console.log("Verification email sent:", info.response);
+    }
+  });
+}
+
 app.get("/api/get", (req, res) => {
-    const sqlGet = "SELECT * FROM user WHERE Status = 'user'";
+    const sqlGet = "SELECT * FROM user WHERE Status = 'user' AND  IsVerified = '1'";
     db.query(sqlGet, (error, result) => {
         res.send(result);
     });
@@ -40,32 +71,68 @@ app.post("/api/login", (req, res) => {
     const { Username, Password } = req.body;
     const sqlQuery = "SELECT * FROM user WHERE Username = ? AND Password = ?";
     db.query(sqlQuery, [Username, Password], (err, result) => {
-        if(err) return res.json({Message: "Error inside server"});
-        if(result.length > 0){
-            const user = result[0];
-            return res.json({
-                Login: true,
-                Status: user.Status,
-                U_id: user.U_id
-            })
+      if (err) {
+        return res.json({ Message: "Error inside server" });
+      }
+      if (result.length > 0) {
+        const user = result[0];
+        if (user.IsVerified === 1) { // Check if account is verified (IsVerified = 1)
+          return res.json({
+            Login: true,
+            Status: user.Status,
+            U_id: user.U_id,
+            IsVerified: user.IsVerified
+          });
         } else {
-            return res.json({Login: false})
+          return res.json({
+            Login: false,
+            Message: "Your account has not been verified. Please check your email for the verification link."
+          });
         }
+      } else {
+        return res.json({ Login: false });
+      }
     });
-  });
+  });  
 
 app.post("/api/post", (req, res) => {
-    const { Username, Password, Fullname, Email } = req.body;
-    const sqlInsert = "INSERT INTO user (Username, Password, Fullname, Email, Status) VALUES (?, ?, ?, ?, 'user')";
-    db.query(sqlInsert, [Username, Password, Fullname, Email], (error, result) => {
-        if (error) {
-            console.log(error);
-            res.sendStatus(500);
-          } else {
-            res.sendStatus(200);
-          }
-    });
+  const { Username, Password, Fullname, Email } = req.body;
+  const verificationToken = crypto.randomBytes(20).toString("hex");
+  const sqlInsert =
+    "INSERT INTO user (Username, Password, Fullname, Email, Status, VerificationToken) VALUES (?, ?, ?, ?, 'user', ?)";
+  db.query(
+    sqlInsert,
+    [Username, Password, Fullname, Email, verificationToken],
+    (error, result) => {
+      if (error) {
+        console.log(error);
+        res.sendStatus(500);
+      } else {
+        sendVerificationEmail(Email, verificationToken);
+        res.sendStatus(200);
+      }
+    }
+  );
 });
+
+app.get("/verify/:token", (req, res) => {
+    const verificationToken = req.params.token;
+    const sqlUpdate = "UPDATE user SET IsVerified = '1' WHERE VerificationToken = ?";
+    db.query(sqlUpdate, [verificationToken], (error, result) => {
+      if (error) {
+        console.log(error);
+        res.sendStatus(500);
+      } else {
+        if (result.changedRows === 1) {
+          // Verification successful
+          res.send("Your account has been successfully verified. You can now log in.");
+        } else {
+          // Invalid verification token
+          res.send("Invalid verification token.");
+        }
+      }
+    });
+  });
 
 app.delete("/api/remove/:U_id", (req, res) => {
     const { U_id } = req.params;

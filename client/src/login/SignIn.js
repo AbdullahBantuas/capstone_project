@@ -35,7 +35,7 @@ function SignIn() {
       })
       .then(() => {
           setState({Username: "", Password: "", Fullname: "", Email: ""});
-          alert("Sucessfully created an account!")
+          alert("Sucessfully created, please check your email to verify your account")
           navigate('/');
           navigate(handleSignUp);
       }).catch((err) => {
@@ -50,21 +50,26 @@ function SignIn() {
     if (!Username || !Password) {
       alert("Please enter both username and password");
     } else {
-      axios.post("http://localhost:5000/api/login", {
-        Username,
-        Password
-      })
+      axios
+        .post("http://localhost:5000/api/login", {
+          Username,
+          Password
+        })
         .then((response) => {
           console.log(response.data.Status);
           if (response.data.Login) {
             if (response.data.Status === "admin") {
-              localStorage.setItem('U_id', response.data.U_id);
-              navigate('/home');
+              localStorage.setItem("U_id", response.data.U_id);
+              navigate("/home");
               alert("Logged in as admin!");
             } else if (response.data.Status === "user") {
-              localStorage.setItem('U_id', response.data.U_id);
-              navigate('/userhome');
-              alert("Logged in as user!");
+              if (response.data.IsVerified) {
+                localStorage.setItem("U_id", response.data.U_id);
+                navigate("/userhome");
+                alert("Logged in as user!");
+              } else {
+                alert("Your Gmail account is not verified yet.");
+              }
             }
           } else {
             alert("Invalid username or password");
@@ -74,8 +79,8 @@ function SignIn() {
           console.log(err);
           alert("Error logging in");
         });
-    } 
-  }
+    }
+  };  
 
   const handleInputChange = (e) => {
     const {name, value} = e.target;
