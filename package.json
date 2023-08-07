@@ -39,6 +39,7 @@
     "react-social-login-buttons": "^3.6.1",
     "react-to-print": "^2.14.12",
     "styled-components": "^5.3.10",
+    "sweetalert2": "^11.7.5",
     "xlsx": "^0.18.5"
   }
 }

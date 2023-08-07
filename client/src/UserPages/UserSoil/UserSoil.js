@@ -12,7 +12,7 @@ function SoilData() {
   const [data, setData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(3);
+  const [itemsPerPage, setItemsPerPage] = useState(4);
   const [totalItems, setTotalItems] = useState(0);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -104,21 +104,24 @@ function SoilData() {
     }
     return (
       <div className="pagination">
-        {pageNumbers.map((pageNumber) => (
+        <div className="page-info">
+        {currentPage}-{pageNumbers.length}
+        </div>
         <button
-          key={pageNumber}
-          onClick={() => onPageChange(pageNumber)}
-          className={pageNumber === currentPage ? "active" : ""}
+          onClick={() => onPageChange(currentPage - 1)}
+          disabled={currentPage === 1}
         >
-        {pageNumber}
+          Prev
         </button>
-        ))}
-        {pageNumbers.length > 3 && currentPage < pageNumbers.length && (
-          <button onClick={() => onPageChange(currentPage + 1)}>Next</button>
-        )}
+        <button
+          onClick={() => onPageChange(currentPage + 1)}
+          disabled={currentPage === pageNumbers.length}
+        >
+          Next
+        </button>
       </div>
     );
-  }
+  }  
 }
 
 export default SoilData;

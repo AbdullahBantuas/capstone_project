@@ -5,6 +5,7 @@ import axios from "axios";
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import Swal from "sweetalert2";
 
 function UserData() {
   const [data, setData] = useState([]);
@@ -30,19 +31,47 @@ function UserData() {
   };
 
   const deleteContact = (U_id) => {
-    if (window.confirm("Are you sure that you want to delete that content?")) {
-      axios.delete(`http://localhost:5000/api/remove/${U_id}`);
-      alert("User deleted successfully");
-      setTimeout(() => loadData(), 500);
-    }
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios.delete(`http://localhost:5000/api/remove/${U_id}`);
+        Swal.fire(
+          'Deleted!',
+          'Account has been deleted.',
+          'success'
+        );
+        setTimeout(() => loadData(), 500);
+      }
+    });
   };
 
   const updateContact = (U_id) => {
-    if (window.confirm("This user will be set to admin!")) {
-      axios.put(`http://localhost:5000/api/update/${U_id}`);
-      alert("User set to admin");
-      setTimeout(() => loadData(), 500);
-    }
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "Set user to admin",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, set to admin!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios.put(`http://localhost:5000/api/update/${U_id}`);
+        Swal.fire(
+          'Success!',
+          'Account has been set to admin.',
+          'success'
+        );
+        setTimeout(() => loadData(), 500);
+      }
+    });
   };
 
   const handleSearch = (event) => {
@@ -126,21 +155,24 @@ function UserData() {
     }
     return (
       <div className="pagination">
-        {pageNumbers.map((pageNumber) => (
+        <div className="page-info">
+        {currentPage}-{pageNumbers.length}
+        </div>
         <button
-          key={pageNumber}
-          onClick={() => onPageChange(pageNumber)}
-          className={pageNumber === currentPage ? "active" : ""}
+          onClick={() => onPageChange(currentPage - 1)}
+          disabled={currentPage === 1}
         >
-        {pageNumber}
+          Prev
         </button>
-        ))}
-        {pageNumbers.length > 3 && currentPage < pageNumbers.length && (
-          <button onClick={() => onPageChange(currentPage + 1)}>Next</button>
-        )}
+        <button
+          onClick={() => onPageChange(currentPage + 1)}
+          disabled={currentPage === pageNumbers.length}
+        >
+          Next
+        </button>
       </div>
     );
-  }
+  }  
 }
 
 export default UserData;

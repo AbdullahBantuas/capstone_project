@@ -3,6 +3,7 @@ import {useNavigate, useParams, Link} from "react-router-dom";
 import "./SignIn.css";
 import axios from "axios";
 import {toast} from "react-toastify";
+import Swal from "sweetalert2";
 
 const initialState = {
   Username: "",
@@ -35,12 +36,12 @@ function SignIn() {
       })
       .then(() => {
           setState({Username: "", Password: "", Fullname: "", Email: ""});
-          alert("Sucessfully created, please check your email to verify your account")
+          Swal.fire('Sucessfully created, please check your email to verify your account!', '', 'success');
           navigate('/');
           navigate(handleSignUp);
       }).catch((err) => {
         console.error(err);
-        alert("Error: username or gmail already exist");
+        Swal.fire('Error: username or gmail already exist.', '', 'info');
         });
     }
   };
@@ -61,23 +62,31 @@ function SignIn() {
             if (response.data.Status === "admin") {
               localStorage.setItem("U_id", response.data.U_id);
               navigate("/home");
-              alert("Logged in as admin!");
+              Swal.fire(
+                'Logged In!',
+                'Logged in as admin.',
+                'success'
+              );
             } else if (response.data.Status === "user") {
               if (response.data.IsVerified) {
                 localStorage.setItem("U_id", response.data.U_id);
                 navigate("/userhome");
-                alert("Logged in as user!");
+                Swal.fire(
+                  'Logged In!',
+                  'Logged in as user.',
+                  'success'
+                );
               } else {
                 alert("Your Gmail account is not verified yet.");
               }
             }
           } else {
-            alert("Invalid username or password");
+            Swal.fire('Invalid username or password.', '', 'info');
           }
         })
         .catch((err) => {
           console.log(err);
-          alert("Error logging in");
+          Swal.fire('Error logging in.', '', 'info');
         });
     }
   };  

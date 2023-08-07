@@ -4,7 +4,7 @@ import { useParams, Link } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import axios from "axios";
 import ReactToPrint from "react-to-print";
-import "../SoilData/ViewSoil.css";
+// import "../SoilData/ViewSoil.css";
 
 const RootStyle = styled("div")(({ theme }) => ({
   padding: "20vh",
@@ -24,7 +24,7 @@ export default function About() {
   return (
     <>
       <RootStyle ref={componentRef} style={{minWidth: "800px"}}>
-        <Link to="/geomap">
+        <Link to="/soildata">
             <div className="btn btn-edit">Go Back</div>
         </Link>
         <ReactToPrint
@@ -78,6 +78,46 @@ export default function About() {
                 Longitude:
               </Typography>
             </div>
+            <div>
+              <Typography
+                variant="h7"
+                sx={{ color: " black", textAlign: "center" }}
+              >
+                Location address:
+              </Typography>
+            </div>
+            <div>
+              <Typography
+                variant="h7"
+                sx={{ color: " black", textAlign: "center" }}
+              >
+                Soil type:
+              </Typography>
+            </div>
+            <div>
+              <Typography
+                variant="h7"
+                sx={{ color: " black", textAlign: "center" }}
+              >
+                Sample date:
+              </Typography>
+            </div>
+            <div>
+              <Typography
+                variant="h7"
+                sx={{ color: " black", textAlign: "center" }}
+              >
+                Source:
+              </Typography>
+            </div>
+            <div>
+              <Typography
+                variant="h7"
+                sx={{ color: " black", textAlign: "center" }}
+              >
+                Taxonomic classification:
+              </Typography>
+            </div>
           </Grid>
           <Grid item direction="column" md={3}>
             <div>
@@ -104,7 +144,74 @@ export default function About() {
                 {user.Longitude}
               </Typography>
             </div>
+            <div>
+              <Typography
+                variant="h7"
+                sx={{ color: " black", textAlign: "center" }}
+              >
+                {user.Location_address}
+              </Typography>
+            </div>
+            <div>
+              <Typography
+                variant="h7"
+                sx={{ color: " black", textAlign: "center" }}
+              >
+                {user.Soil_type}
+              </Typography>
+            </div>
+            <div>
+              <Typography
+                variant="h7"
+                sx={{ color: " black", textAlign: "center" }}
+              >
+                {user.Sample_date}
+              </Typography>
+            </div>
+            <div>
+              <Typography
+                variant="h7"
+                sx={{ color: " black", textAlign: "center" }}
+              >
+                {user.Source}
+              </Typography>
+            </div>
+            <div>
+              <Typography
+                variant="h7"
+                sx={{ color: " black", textAlign: "center" }}
+              >
+                {user.Taxonomic_classification}
+              </Typography>
+            </div>
           </Grid>
+        </Grid>
+        <Grid
+          container
+          direction="column"
+          alignItems="flex-start"
+          sx={{ paddingTop: 5 }}
+        >
+          <Typography
+            variant="h7"
+            sx={{ color: " black", textAlign: "center" }}
+          >
+            Location Description
+          </Typography>
+        </Grid>
+        <Grid
+          container
+          direction="column"
+          alignItems="flex-start"
+          sx={{ paddingTop: 5 }}
+        >
+          <TextField
+            multiline
+            disabled
+            sx={{ bgcolor: "white" }}
+            fullWidth
+            value={user.Location_description}
+          />
         </Grid>
         <Grid
           container
@@ -427,7 +534,7 @@ export default function About() {
             variant="h7"
             sx={{ color: " black", textAlign: "center" }}
           >
-            Description
+            Soil Description
           </Typography>
         </Grid>
         <Grid
@@ -441,7 +548,7 @@ export default function About() {
             disabled
             sx={{ bgcolor: "white" }}
             fullWidth
-            value={user.Description}
+            value={user.Soil_description}
           />
         </Grid>
       </RootStyle>

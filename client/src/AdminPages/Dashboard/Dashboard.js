@@ -27,6 +27,29 @@ const Dashboard = () => {
     const response6 = await axios.get("http://localhost:5000/api/SoilCountLow");
     const lowQualitySoilCount = response6.data[0]["COUNT(*)"];
 
+    const response7 = await axios.get("http://localhost:5000/api/Kidapawan");
+    const Kidapawan = response7.data[0]["COUNT(*)"];
+    const response8 = await axios.get("http://localhost:5000/api/Adtuyon");
+    const Adtuyon = response8.data[0]["COUNT(*)"];
+    const response9 = await axios.get("http://localhost:5000/api/Langkong");
+    const Langkong = response9.data[0]["COUNT(*)"];
+    const response10 = await axios.get("http://localhost:5000/api/Bolinao");
+    const Bolinao = response10.data[0]["COUNT(*)"];
+    const response11 = await axios.get("http://localhost:5000/api/Kudarangan");
+    const Kudarangan = response11.data[0]["COUNT(*)"];
+    const response12 = await axios.get("http://localhost:5000/api/LaCastellana");
+    const LaCastellana = response12.data[0]["COUNT(*)"];
+    const response13 = await axios.get("http://localhost:5000/api/Ruguan");
+    const Ruguan = response13.data[0]["COUNT(*)"];
+    const response14 = await axios.get("http://localhost:5000/api/Binidayan");
+    const Binidayan = response14.data[0]["COUNT(*)"];
+    const response15 = await axios.get("http://localhost:5000/api/Malabang");
+    const Malabang = response15.data[0]["COUNT(*)"];
+    const response16 = await axios.get("http://localhost:5000/api/Caromatan");
+    const Caromatan = response16.data[0]["COUNT(*)"];
+    const response17 = await axios.get("http://localhost:5000/api/Ramain");
+    const Ramain = response17.data[0]["COUNT(*)"];
+
     const data = [highQualitySoilCount, mediumQualitySoilCount, lowQualitySoilCount];
     const smallValue = 0.1;
     for (let i = 0; i < data.length; i++) {
@@ -34,9 +57,16 @@ const Dashboard = () => {
         data[i] = smallValue;
       }
   }
+    const data2 = [Kidapawan, Adtuyon, Langkong, Bolinao, Kudarangan, LaCastellana, Ruguan, Binidayan, Malabang, Caromatan, Ramain];
+    const smallValue2 = 0.1;
+    for (let i = 0; i < data.length; i++) {
+      if (data2[i] === 0) {
+        data2[i] = smallValue2;
+      }
+  }
 
-    const pieChart = new Chart(document.getElementById('pieChart'), {
-      type: 'pie',
+    const barChart = new Chart(document.getElementById('barChart'), {
+      type: 'bar',
       data: {
         labels: ['High', 'Medium', 'Low'],
         datasets: [{
@@ -49,6 +79,35 @@ const Dashboard = () => {
           title: {
             display: true,
             text: 'Soil Quality Index Distribution'
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+
+    const barChart2 = new Chart(document.getElementById('barChart2'), {
+      type: 'bar',
+      data: {
+        labels: ['Kidapawan', 'Adtuyon', 'Langkong', 'Bolinao', 'Kudarangan', 'La Castellana', 'Ruguan', 'Binidayan', 'Malabang', 'Caromatan', 'Ramain'],
+        datasets: [{
+          data: [Kidapawan, Adtuyon, Langkong, Bolinao, Kudarangan, LaCastellana, Ruguan, Binidayan, Malabang, Caromatan, Ramain],
+          backgroundColor: ['blue']
+        }]
+      },
+      options: {
+        plugins: {
+          title: {
+            display: true,
+            text: 'Land Soil Type'
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true
           }
         }
       }
@@ -74,7 +133,10 @@ const Dashboard = () => {
         <h2>ADMIN</h2>
       </div>
       <div className="chart-container">
-        <canvas id="pieChart" style={{ width: "10%", height: "10%" }}></canvas>
+        <canvas id="barChart" style={{ width: "100%", height: "300px" }}></canvas>
+      </div>
+      <div className="chart-container">
+        <canvas id="barChart2" style={{ width: "90%", height: "300px", marginLeft: "30px" }}></canvas>
       </div>
     </div>
   );

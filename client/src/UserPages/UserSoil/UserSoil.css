@@ -80,6 +80,11 @@
     justify-content: center;
     margin-top: 10px;
     margin-bottom: 10px;
+    align-items: center;
+}
+
+.page-info {
+    margin-right: 5px;
 }
 
 .pagination button {

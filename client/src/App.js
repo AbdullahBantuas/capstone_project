@@ -21,6 +21,7 @@ import UserSoil from './UserPages/UserSoil/UserSoil';
 import UserResearchers from './UserPages/UserResearchers/UserResearchers';
 import ViewSoil3 from './UserPages/UserGeomap/ViewSoil3';
 import ViewSoil4 from './UserPages/UserSoil/ViewSoil4';
+import User from './UserPages/User/User';
 
 function App() {
   return (
@@ -47,6 +48,7 @@ function App() {
         <Route path="/userresearchers" element={<UserResearchers />} />
         <Route path="/viewSoil3/:id" element={<ViewSoil3 />} />
         <Route path="/viewSoil4/:id" element={<ViewSoil4 />} />
+        <Route path="/user" element={<User />} />
       </Routes>
     </Router>
   );
@@ -92,6 +94,8 @@ const Navigation = React.memo(() => {
   } else if (/\/viewSoil3\/\d+/.test(location.pathname)) {
     return <UserNavbar />;
   } else if (/\/viewSoil4\/\d+/.test(location.pathname)) {
+    return <UserNavbar />;
+  } else if (location.pathname === '/user'){
     return <UserNavbar />;
   } else {
     return null;

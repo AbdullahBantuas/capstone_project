@@ -3,12 +3,19 @@ import {useNavigate, useParams, Link} from "react-router-dom";
 import "../SoilData/AddEditSoil.css";
 import axios from "axios";
 import {toast} from "react-toastify";
+import Swal from "sweetalert2";
 
 const initialState = {
     Location_name: "", 
     Latitude: "", 
     Longitude: "",
-    Description: "",
+    Location_description: "",
+    Location_address: "",
+    Soil_type: "",
+    Taxonomic_classification: "",
+    Sample_date: "",
+    Source: "",
+    Soil_description: "",
     Bulk_density: "",
     Particle_density: "", 
     Void_ratio: "", 
@@ -32,7 +39,7 @@ const initialState = {
 const AddEditSoil = () => {
     const [state, setState] = useState(initialState);
 
-    const {Location_name, Latitude, Longitude, Description, Bulk_density, Particle_density, Void_ratio, Porosity, Moisture_content_mass, Moisture_content_volume, Water_holding_capacity, Clay, Silt, Sand, Soil_pH, Total_nitrogen, Extractable_phosphorus, Exchangeable_potassium, Cation_exchange_capacity, Organic_matter, Earthworm_density, SQI} = state;
+    const {Location_name, Latitude, Longitude, Location_description, Location_address, Soil_type, Taxonomic_classification, Sample_date, Source, Soil_description, Bulk_density, Particle_density, Void_ratio, Porosity, Moisture_content_mass, Moisture_content_volume, Water_holding_capacity, Clay, Silt, Sand, Soil_pH, Total_nitrogen, Extractable_phosphorus, Exchangeable_potassium, Cation_exchange_capacity, Organic_matter, Earthworm_density, SQI} = state;
 
     const navigate = useNavigate();
 
@@ -44,15 +51,21 @@ const AddEditSoil = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if(!Location_name || !Latitude || !Longitude || !Description || !Bulk_density || !Particle_density || !Void_ratio || !Porosity || !Moisture_content_mass || !Moisture_content_volume || !Water_holding_capacity || !Clay || !Silt || !Sand || !Soil_pH || !Total_nitrogen || !Extractable_phosphorus || !Exchangeable_potassium || !Cation_exchange_capacity || !Organic_matter || !Earthworm_density || !SQI) {
-            alert("Please provide value into each input field");
+        if(!Location_name || !Latitude || !Longitude || !Location_description || !Location_address || !Soil_type || !Taxonomic_classification || !Sample_date || !Source || !Soil_description || !Bulk_density || !Particle_density || !Void_ratio || !Porosity || !Moisture_content_mass || !Moisture_content_volume || !Water_holding_capacity || !Clay || !Silt || !Sand || !Soil_pH || !Total_nitrogen || !Extractable_phosphorus || !Exchangeable_potassium || !Cation_exchange_capacity || !Organic_matter || !Earthworm_density || !SQI) {
+            Swal.fire('Please provide value into each input field', '', 'info');
         } else {
             if(!id) {
                 axios.post(`http://localhost:5000/api/addsoil`, {
                     Location_name,
                     Latitude,
                     Longitude,
-                    Description,
+                    Location_description,
+                    Location_address,
+                    Soil_type,
+                    Taxonomic_classification,
+                    Sample_date,
+                    Source,
+                    Soil_description,
                     Bulk_density,
                     Particle_density,
                     Void_ratio,
@@ -72,19 +85,27 @@ const AddEditSoil = () => {
                     Earthworm_density,
                     SQI
                 }).then(() => {
-                    setState({Location_name: "", Latitude: "", Longitude: "", Description: "", Bulk_density: "", Particle_density: "", Void_ratio: "", Porosity: "", Moisture_content_mass: "", Moisture_content_volume: "", Water_holding_capacity: "", Clay: "", Silt: "", Sand: "", Soil_pH: "", Total_nitrogen: "", Extractable_phosphorus: "", Exchangeable_potassium: "", Cation_exchange_capacity: "", Organic_matter: "", Earthworm_density: "", SQI: ""});
-                    alert("Data added successfully");
+                    setState({Location_name: "", Latitude: "", Longitude: "", Location_description: "", Location_address: "", Soil_type: "",
+                    Taxonomic_classification: "", Sample_date: "", Source: "",
+                    Soil_description: "", Bulk_density: "", Particle_density: "", Void_ratio: "", Porosity: "", Moisture_content_mass: "", Moisture_content_volume: "", Water_holding_capacity: "", Clay: "", Silt: "", Sand: "", Soil_pH: "", Total_nitrogen: "", Extractable_phosphorus: "", Exchangeable_potassium: "", Cation_exchange_capacity: "", Organic_matter: "", Earthworm_density: "", SQI: ""});
+                    Swal.fire('Data Saved!', '', 'success');
                     setTimeout(() => navigate("/soildata"), 500);
                     }).catch((err) => {
                     console.error(err);
-                    alert("Error: Please check your data inputted or data already exist");
+                    Swal.fire('Data already exist', '', 'info');
                     });
             } else {
                 axios.put(`http://localhost:5000/api/updatesoil/${id}`, {
                     Location_name, 
                     Latitude, 
                     Longitude,
-                    Description,
+                    Location_description,
+                    Location_address,
+                    Soil_type,
+                    Taxonomic_classification,
+                    Sample_date,
+                    Source,
+                    Soil_description,
                     Bulk_density,
                     Particle_density, 
                     Void_ratio, 
@@ -104,10 +125,11 @@ const AddEditSoil = () => {
                     SQI
                 })
                 .then(() => {
-                    setState({Location_name: "", Latitude: "", Longitude: "", Description: "", Bulk_density: "", Particle_density: "", Void_ratio: "", Porosity: "", Moisture_content_mass: "", Moisture_content_volume: "", Water_holding_capacity: "", Clay: "", Silt: "", Sand: "", Soil_pH: "", Total_nitrogen: "", Extractable_phosphorus: "", Exchangeable_potassium: "", Cation_exchange_capacity: "", Organic_matter: "", Earthworm_density: "", SQI: ""});
+                    setState({Location_name: "", Latitude: "", Longitude: "", Location_description: "", Location_address: "", Soil_type: "",
+                    Taxonomic_classification: "", Sample_date: "", Source: "", Soil_description: "", Bulk_density: "", Particle_density: "", Void_ratio: "", Porosity: "", Moisture_content_mass: "", Moisture_content_volume: "", Water_holding_capacity: "", Clay: "", Silt: "", Sand: "", Soil_pH: "", Total_nitrogen: "", Extractable_phosphorus: "", Exchangeable_potassium: "", Cation_exchange_capacity: "", Organic_matter: "", Earthworm_density: "", SQI: ""});
                 })
                 .catch((err) => alert("Unsuccesful"));
-                alert("Data Updated Successfully")
+                Swal.fire('Data updated!', '', 'success');
                 setTimeout(() => navigate("/soildata"), 500);
             }
         }
@@ -156,6 +178,61 @@ const AddEditSoil = () => {
                             name="Longitude"
                             placeholder="Longitude ..."
                             value={Longitude || ""}
+                            onChange={handleInputChange}
+                            />
+                            </div>
+                            <div className="input-field">
+                            <label htmlFor="Location_address">Location_address</label>
+                            <input
+                            type="text"
+                            id="Location_address"
+                            name="Location_address"
+                            placeholder="Location address ..."
+                            value={Location_address || ""}
+                            onChange={handleInputChange}
+                            />
+                            </div>
+                            <div className="input-field">
+                            <label htmlFor="Soil_type">Soil_type</label>
+                            <input
+                            type="text"
+                            id="Soil_type"
+                            name="Soil_type"
+                            placeholder="Soil type ..."
+                            value={Soil_type || ""}
+                            onChange={handleInputChange}
+                            />
+                            </div>
+                            <div className="input-field">
+                            <label htmlFor="Taxonomic_classification">Taxonomic_classification</label>
+                            <input
+                            type="text"
+                            id="Taxonomic_classification"
+                            name="Taxonomic_classification"
+                            placeholder="Taxonomic classification ..."
+                            value={Taxonomic_classification || ""}
+                            onChange={handleInputChange}
+                            />
+                            </div>
+                            <div className="input-field">
+                            <label htmlFor="Sample_date">Sample_date</label>
+                            <input
+                            type="text"
+                            id="Sample_date"
+                            name="Sample_date"
+                            placeholder="Sample date ..."
+                            value={Sample_date || ""}
+                            onChange={handleInputChange}
+                            />
+                            </div>
+                            <div className="input-field">
+                            <label htmlFor="Source">Source</label>
+                            <input
+                            type="text"
+                            id="Source"
+                            name="Source"
+                            placeholder="Source ..."
+                            value={Source || ""}
                             onChange={handleInputChange}
                             />
                             </div>
@@ -358,18 +435,31 @@ const AddEditSoil = () => {
                             />
                             </div>
                             <div className="input-field2">
-                            <label htmlFor="Description">Description</label>
+                            {/* <label htmlFor="Location_description">Location description</label> */}
                             <textarea
                             className='input2'
                             type="text"
-                            id="Description"
-                            name="Description"
-                            placeholder="Description ..."
-                            value={Description || ""}
+                            id="Location_description"
+                            name="Location_description"
+                            placeholder="Location description ..."
+                            value={Location_description || ""}
                             onChange={handleInputChange}
                             style={{ height: "100px", width: "500px" }}
                             />
                             </div>
+                            </div>
+                            <div className="input-field2">
+                            {/* <label htmlFor="Soil_description">Soil description</label> */}
+                            <textarea
+                            className='input2'
+                            type="text"
+                            id="Soil_description"
+                            name="Soil_description"
+                            placeholder="Soil description ..."
+                            value={Soil_description || ""}
+                            onChange={handleInputChange}
+                            style={{ height: "100px", width: "500px", marginTop: "30px", marginRight: "-10px" }}
+                            />
                         </div>
                             <div className="button">
                             <input type="submit" value={id ? "Update" : "Save"} />

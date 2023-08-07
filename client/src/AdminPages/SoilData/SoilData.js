@@ -7,6 +7,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
+import Swal from "sweetalert2";
+import { GreenIcon, OrangeIcon, RedIcon } from '../../imgs/IconComponents';
 
 function SoilData() {
   const [data, setData] = useState([]);
@@ -33,13 +35,29 @@ function SoilData() {
   };
 
   const deleteContact = (S_id) => {
-    if (window.confirm("Are you sure that you want to delete that content?")) {
-      axios.delete(`http://localhost:5000/api/removeSoil2/${S_id}`);
-      axios.delete(`http://localhost:5000/api/removeSoil/${S_id}`);
-      alert("contact deleted successfully");
-      setTimeout(() => loadData(), 500);
-    }
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios.delete(`http://localhost:5000/api/removeSoil3/${S_id}`);
+        axios.delete(`http://localhost:5000/api/removeSoil2/${S_id}`);
+        axios.delete(`http://localhost:5000/api/removeSoil/${S_id}`);
+        Swal.fire(
+          'Deleted!',
+          'Your file has been deleted.',
+          'success'
+        );
+        setTimeout(() => loadData(), 500);
+      }
+    });
   };
+  
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
@@ -71,12 +89,12 @@ function SoilData() {
       .then((response) => response.text())
       .then((result) => {
         console.log(result);
-        alert("Import successful");
+        Swal.fire('Import successful!', '', 'success');
         setTimeout(() => loadData(), 500);
       })
       .catch((error) => {
         console.error(error);
-        alert("Import failed");
+        Swal.fire('Import faile: make sure it is the right file!', '', 'info');
       });
   }
 
@@ -84,9 +102,9 @@ function SoilData() {
     <div className="soildata" style={{ marginTop: "115px" }}>
       <div className="add-container1">
         <input type="file" accept=".csv" onChange={handleFileSelect} style={{ display: 'none' }} />
-        <button className="add2" onClick={handleImportClick} title="Import soil"><CreateNewFolderIcon/></button>
+        <button className="add2" onClick={handleImportClick} title="Import soil data"><CreateNewFolderIcon/></button>
         <Link to="/addSoil">
-            <button className="add1" title="Add soil"><AddLocationAltIcon /></button>
+            <button className="add1" title="Add soil data"><AddLocationAltIcon /></button>
         </Link>
       </div>
       <div className="search-container1">
@@ -108,20 +126,29 @@ function SoilData() {
         </thead>
         <tbody style={{ overflow: "auto", height: "100px" }}>
           {currentData.map((item, index) => {
+            let iconComponent;
+            if (item.SQI > 0.8) {
+              iconComponent = <GreenIcon />;
+            } else if (item.SQI >= 0.5 && item.SQI <= 0.8) {
+              iconComponent = <OrangeIcon />;
+            } else {
+              iconComponent = <RedIcon />;
+            }
+
             return (
               <tr key={item.S_id}>
                 <th scope="row">{indexOfFirstItem + index + 1}</th>
                 <td>{item.Location_name}</td>
-                <td>{item.SQI}</td>
+                <td>{iconComponent} {item.SQI}</td>
                 <td>
                   <div className="btn-group">
                     <Link to={`/updateSoil/${item.S_id}`}>
-                      <button className="btn btn-edit" title="Edit soil"><EditIcon/></button>
+                      <button className="btn btn-edit" title="Edit soil data"><EditIcon/></button>
                     </Link>
                     <button
                       className="btn btn-delete"
                       onClick={() => deleteContact(item.S_id)}
-                      title="Delete soil"
+                      title="Delete soil data"
                     >
                       <DeleteIcon/>
                     </button>
@@ -153,21 +180,24 @@ function SoilData() {
     }
     return (
       <div className="pagination">
-        {pageNumbers.map((pageNumber) => (
+        <div className="page-info">
+        {currentPage}-{pageNumbers.length}
+        </div>
         <button
-          key={pageNumber}
-          onClick={() => onPageChange(pageNumber)}
-          className={pageNumber === currentPage ? "active" : ""}
+          onClick={() => onPageChange(currentPage - 1)}
+          disabled={currentPage === 1}
         >
-        {pageNumber}
+          Prev
         </button>
-        ))}
-        {pageNumbers.length > 2 && currentPage < pageNumbers.length && (
-          <button onClick={() => onPageChange(currentPage + 1)}>Next</button>
-        )}
+        <button
+          onClick={() => onPageChange(currentPage + 1)}
+          disabled={currentPage === pageNumbers.length}
+        >
+          Next
+        </button>
       </div>
     );
-  }
+  }  
 }
 
 export default SoilData;

@@ -225,11 +225,7 @@ const MarkerContent = ({ position, draggable, onMarkerClick, onDragEnd, index, l
           ref={markerRef}
           icon={icon}
         >
-          <Popup>
-            <b>{position.lat}, {position.lng}</b>
-            <br />
-            <b></b>
-            <br />
+          <Popup  className="custom-popup">
             <b>Location name: {location_name}</b>
             <br />
             <b></b>

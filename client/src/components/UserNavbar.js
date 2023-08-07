@@ -7,13 +7,23 @@ import './Navbar.css';
 import { IconContext } from 'react-icons';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
+import Swal from 'sweetalert2';
 
-function handleLogoutClick() {
-  const confirmed = window.confirm('Are you sure you want to logout?');
-  if (confirmed) {
-    window.location.href = '/';
-  }
-}
+const handleLogoutClick = () => {
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'You will be logged out.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, log out!'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.location.href = '/';
+    }
+  });
+};
 
 function UserDropdown() {
   return (
@@ -24,7 +34,7 @@ function UserDropdown() {
       </button>
       <ul className="user-dropdown-menu" style={{ listStyle: 'none' }}>
         <li>
-          <Link to="/update"><AccountCircleIcon/>Profile</Link>
+          <Link to="/user"><AccountCircleIcon/>Profile</Link>
         </li>
         <li>
           <Link onClick={handleLogoutClick}><LogoutIcon/>Logout</Link>
@@ -69,7 +79,7 @@ function Navbar() {
           <Link to='#' className='menu-bars'>
             <FaBars onClick={showSidebar} style={{ marginLeft: '-20px' }}/>
           </Link>
-          <div className='nav-title'>GIS-Based Data Management For Soil Quality Index</div>
+          <div className='nav-title'>GIS-Based Data Management For Soil Quality Index Of The Agricultural Land In Marawi City</div>
           <UserDropdown />
         </div>
         <nav className={sidebar ? 'nav-menu active' : 'nav-menu'}>

@@ -1,17 +1,3 @@
 body {
     background-color: rgb(231, 232, 234);
 }
-
-.body1 {
-    background-image: url('../../imgs/image.jpg');
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: 'Montserrat', sans-serif;
-    height: 100.6vh;
-    width: 100vw;
-    margin: -20px -8px 0;
-    background-size: cover;
-    /* margin-top: 70px; */
-    /* height: calc(100vh + 4.0px); */
-}

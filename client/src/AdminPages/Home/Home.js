@@ -3,11 +3,11 @@ import "./Home.css";
 
 const Home = () => {
   const slides = [
-    { url: require("../../imgs/c1_1267559_170613045538.jpg"), title: "beach" },
-    { url: require("../../imgs/images.jpg"), title: "boat" },
-    { url: require("../../imgs/fsufs-05-706142-g001.jpg"), title: "forest" },
-    { url: require("../../imgs/lanao-del-norte-demo-farm_2021-12-15_11-24-57.jpg"), title: "city" },
-    { url: require("../../imgs/Login_Background.jpg"), title: "italy" },
+    { url: require("../../imgs/7.jpg"), title: "italy" },
+    { url: require("../../imgs/6.jpg"), title: "italy" },
+    { url: require("../../imgs/9.jpg"), title: "italy" },
+    { url: require("../../imgs/11.jpg"), title: "italy" },
+    { url: require("../../imgs/12.jpg"), title: "italy" },
   ];  
   const containerStyles = {
     width: "900px",

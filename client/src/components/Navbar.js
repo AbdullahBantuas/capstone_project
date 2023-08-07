@@ -7,13 +7,24 @@ import './Navbar.css';
 import { IconContext } from 'react-icons';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
+import Swal from 'sweetalert2';
+import axios from "axios";
 
-function handleLogoutClick() {
-  const confirmed = window.confirm('Are you sure you want to logout?');
-  if (confirmed) {
-    window.location.href = '/';
-  }
-}
+const handleLogoutClick = () => {
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'You will be logged out.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, log out!'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.location.href = '/';
+    }
+  });
+};
 
 function UserDropdown() {
   return (
@@ -38,6 +49,14 @@ function Navbar() {
   const [sidebar, setSidebar] = useState(false);
   const navbarRef = useRef(null);
   const sidebarRef = useRef(null);
+  const [user, setUser] = useState({});
+  const U_id = localStorage.getItem('U_id');
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:5000/api/get/${U_id}`)
+      .then((resp) => setUser({ ...resp.data[0] }));
+  }, [U_id]);
 
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
@@ -69,8 +88,9 @@ function Navbar() {
           <Link to='#' className='menu-bars'>
             <FaBars onClick={showSidebar} style={{ marginLeft: '-20px' }}/>
           </Link>
-          <div className='nav-title'>GIS-Based Data Management For Soil Quality Index</div>
-          <UserDropdown />
+          <div className='nav-title'>GIS-Based Data Management For Soil Quality Index Of The Agricultural Land In Marawi City</div>
+          <UserDropdown/>
+          <div className='nav-name'>{user.Fullname}</div>
         </div>
         <nav className={sidebar ? 'nav-menu active' : 'nav-menu'}>
           <ul

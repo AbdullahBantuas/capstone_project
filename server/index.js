@@ -24,7 +24,7 @@ const db = mysql.createPool({
     host: "localhost",
     user: "root",
     password: "Sc@nner1011",
-    database: "soil_quality_index"
+    database: "soil_quality"
 });
 
 const transporter = nodemailer.createTransport({
@@ -180,24 +180,31 @@ app.put("/api/update/:U_id", (req, res) => {
 });
 
 app.get("/api/soil", (req, res) => {
-    const sqlGet = "SELECT * FROM soil_information a, soil_properties b WHERE a.S_id = b.S_id";
+    const sqlGet = "SELECT * FROM soil_information a, soil_properties b, soil_location c WHERE a.S_id = b.S_id AND a.S_id = c.S_id AND b.S_id = c.S_id";
     db.query(sqlGet, (error, result) => {
         res.send(result);
     });
 });
 
 app.post("/api/addsoil", (req, res) => {
-    const { Location_name, Latitude, Longitude, Description, Bulk_density, Particle_density, Void_ratio, Porosity, Moisture_content_mass, Moisture_content_volume, Water_holding_capacity, Clay, Silt, Sand, Soil_pH, Total_nitrogen, Extractable_phosphorus, Exchangeable_potassium, Cation_exchange_capacity, Organic_matter, Earthworm_density, SQI } = req.body;
+    const { Location_name, Latitude, Longitude, Location_description, Location_address, Soil_type, Taxonomic_classification, Sample_date, Source, Soil_description, Bulk_density, Particle_density, Void_ratio, Porosity, Moisture_content_mass, Moisture_content_volume, Water_holding_capacity, Clay, Silt, Sand, Soil_pH, Total_nitrogen, Extractable_phosphorus, Exchangeable_potassium, Cation_exchange_capacity, Organic_matter, Earthworm_density, SQI } = req.body;
   
-    const sqlInsertSoilInfo = "INSERT INTO soil_information (Location_name, Latitude, Longitude, Description) VALUES (?, ?, ?, ?);";
-    db.query(sqlInsertSoilInfo, [Location_name, Latitude, Longitude, Description], (error, result) => {
+    const sqlInsertSoilLoc = "INSERT INTO soil_location (Location_name, Latitude, Longitude, Location_description, Location_address) VALUES (?, ?, ?, ?, ?)";
+    db.query(sqlInsertSoilLoc, [Location_name, Latitude, Longitude, Location_description, Location_address], (error, result) => {
       if (error) {
         console.log(error);
         res.sendStatus(500);
       } else {
         const S_id = result.insertId;
-        const sqlInsertSoilProps = "INSERT INTO soil_properties (S_id, Bulk_density, Particle_density, Void_ratio, Porosity, Moisture_content_mass, Moisture_content_volume, Water_holding_capacity, Clay, Silt, Sand, Soil_pH, Total_nitrogen, Extractable_phosphorus, Exchangeable_potassium, Cation_exchange_capacity, Organic_matter, Earthworm_density, SQI) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        db.query(sqlInsertSoilProps, [S_id, Bulk_density, Particle_density, Void_ratio, Porosity, Moisture_content_mass, Moisture_content_volume, Water_holding_capacity, Clay, Silt, Sand, Soil_pH, Total_nitrogen, Extractable_phosphorus, Exchangeable_potassium, Cation_exchange_capacity, Organic_matter, Earthworm_density, SQI], (error, result) => {
+        const sqlInsertSoilInfo = "INSERT INTO soil_information (S_id, Soil_type, Taxonomic_classification, Soil_description, Sample_date, Source) VALUES (?, ?, ?, ?, ?, ?)";
+        db.query(sqlInsertSoilInfo, [S_id, Soil_type, Taxonomic_classification, Soil_description, Sample_date, Source], (error, result) => {
+          if (error) {
+            console.log(error);
+            res.sendStatus(500);
+        } else {
+          const S_id = result.insertId;
+          const sqlInsertSoilProps = "INSERT INTO soil_properties (S_id, Bulk_density, Particle_density, Void_ratio, Porosity, Moisture_content_mass, Moisture_content_volume, Water_holding_capacity, Clay, Silt, Sand, Soil_pH, Total_nitrogen, Extractable_phosphorus, Exchangeable_potassium, Cation_exchange_capacity, Organic_matter, Earthworm_density, SQI) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+          db.query(sqlInsertSoilProps, [S_id, Bulk_density, Particle_density, Void_ratio, Porosity, Moisture_content_mass, Moisture_content_volume, Water_holding_capacity, Clay, Silt, Sand, Soil_pH, Total_nitrogen, Extractable_phosphorus, Exchangeable_potassium, Cation_exchange_capacity, Organic_matter, Earthworm_density, SQI], (error, result) => {
           if (error) {
             console.log(error);
             res.sendStatus(500);
@@ -207,8 +214,9 @@ app.post("/api/addsoil", (req, res) => {
         });
       }
     });
+  }
   });
-  
+});  
 app.post('/upload', upload.single('file'), (req, res) => {
     const filePath = req.file.path;
     const results = [];
@@ -222,22 +230,32 @@ app.post('/upload', upload.single('file'), (req, res) => {
         results.push(data);
       })
       .on('end', () => {
-        const query1 = 'INSERT INTO soil_information (Location_name, Latitude, Longitude, Description) VALUES (?, ?, ?, ?)';
-        const query2 = 'INSERT INTO soil_properties (S_id, Bulk_density, Particle_density, Void_ratio, Porosity, Moisture_content_mass, Moisture_content_volume, Water_holding_capacity, Clay, Silt, Sand, Soil_pH, Total_nitrogen, Extractable_phosphorus, Exchangeable_potassium, Cation_exchange_capacity, Organic_matter, Earthworm_density, SQI) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        const query1 = 'INSERT INTO soil_location (Location_name, Latitude, Longitude, Location_description, Location_address) VALUES (?, ?, ?, ?, ?)';
+        const query2 = 'INSERT INTO soil_information (S_id, Soil_type, Taxonomic_classification, Soil_description, Sample_date, Source) VALUES (?, ?, ?, ?, ?, ?)';
+        const query3 = 'INSERT INTO soil_properties (S_id, Bulk_density, Particle_density, Void_ratio, Porosity, Moisture_content_mass, Moisture_content_volume, Water_holding_capacity, Clay, Silt, Sand, Soil_pH, Total_nitrogen, Extractable_phosphorus, Exchangeable_potassium, Cation_exchange_capacity, Organic_matter, Earthworm_density, SQI) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
   
         results.forEach((result) => {
-            db.query(query1, [result.Location_name, result.Latitude, result.Longitude, result.Description], (error, result1) => {
+            db.query(query1, [result.Location_name, result.Latitude, result.Longitude, result.Location_address, result.Location_description], (error, result1) => {
                 if (error) {
                   console.log(error);
                 } else {
                   console.log('Inserted row into soil_information table:');
                   const S_id = result1.insertId;
                   
-                  db.query(query2, [S_id, result.Bulk_density, result.Particle_density, result.Void_ratio, result.Porosity, result.Moisture_content_mass, result.Moisture_content_volume, result.Water_holding_capacity, result.Clay, result.Silt, result.Sand, result.Soil_pH, result.Total_nitrogen, result.Extractable_phosphorus, result.Exchangeable_potassium, result.Cation_exchange_capacity, result.Organic_matter, result.Earthworm_density, result.SQI], (error, result2) => {
+                  db.query(query2, [S_id, result.Soil_type, result.Taxonomic_classification, result.Sample_date, result.Source, result.Soil_description], (error, result2) => {
                     if (error) {
                       console.log(error);
                     } else {
                       console.log('Inserted row into soil_properties table:');
+                      const S_id = result2.insertId;
+
+                      db.query(query3, [S_id, result.Bulk_density, result.Particle_density, result.Void_ratio, result.Porosity, result.Moisture_content_mass, result.Moisture_content_volume, result.Water_holding_capacity, result.Clay, result.Silt, result.Sand, result.Soil_pH, result.Total_nitrogen, result.Extractable_phosphorus, result.Exchangeable_potassium, result.Cation_exchange_capacity, result.Organic_matter, result.Earthworm_density, result.SQI], (error, result3) => {
+                        if (error) {
+                          console.log(error);
+                        } else {
+                          console.log('Inserted row into soil_properties table:');
+                        }
+                      });
                     }
                   });
                 }
@@ -246,37 +264,11 @@ app.post('/upload', upload.single('file'), (req, res) => {
   
         res.send('Import successful');
       });
-  });
-
-// app.post('/upload2', upload.single('file'), (req, res) => {
-//     const filePath = req.file.path;
-//     const results = [];
-  
-//     fs.createReadStream(filePath)
-//       .pipe(csv({ mapHeaders: ({ header }) => header.trim() }))
-//       .on('data', (data) => {
-//         results.push(data);
-//       })
-//       .on('end', () => {
-//         const query = 'INSERT INTO soil_properties (Bulk_density, Particle_density, Void_ratio, Porosity, Moisture_content_mass, Moisture_content_volume, Water_holding_capacity, Clay, Silt, Sand, Soil_pH, Total_nitrogen, Extractable_phosphorus, Exchangeable_potassium, Cation_exchange_capacity, Organic_matter, Earthworm_density, SQI) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-  
-//         results.forEach((result) => {
-//           db.query(query, [result.Bulk_density, result.Particle_density, result.Void_ratio, result.Porosity, result.Moisture_content_mass, result.Moisture_content_volume, result.Water_holding_capacity, result.Clay, result.Silt, result.Sand, result.Soil_pH, result.Total_nitrogen, result.Extractable_phosphorus, result.Exchangeable_potassium, result.Cation_exchange_capacity, result.Organic_matter, result.Earthworm_density, result.SQI], (error, rows) => {
-//             if (error) {
-//               console.log(error);
-//             } else {
-//               console.log('Inserted row into table2:');
-//             }
-//           });
-//         });
-  
-//         res.send('Import successful');
-//       });
-//   });  
+  });  
   
 app.get("/api/soil/:S_id", (req, res) => {
     const { S_id } = req.params;
-    const sqlGet = "SELECT * FROM soil_information a, soil_properties b WHERE a.S_id = ? AND a.S_id = b.S_id";
+    const sqlGet = "SELECT * FROM soil_location c, soil_properties b,  soil_information a WHERE a.S_id = ? AND a.S_id = b.S_id AND a.S_id = c.S_id AND b.S_id = c.S_id";
     db.query(sqlGet, S_id, (error, result) => {
         if (error) {
             console.log(error);
@@ -287,9 +279,9 @@ app.get("/api/soil/:S_id", (req, res) => {
 
 app.put("/api/updatesoil/:S_id", (req, res) => {
     const { S_id } = req.params;
-    const { Location_name, Latitude, Longitude, Description, Bulk_density, Particle_density, Void_ratio, Porosity, Moisture_content_mass, Moisture_content_volume, Water_holding_capacity, Clay, Silt, Sand, Soil_pH, Total_nitrogen, Extractable_phosphorus, Exchangeable_potassium, Cation_exchange_capacity, Organic_matter, Earthworm_density, SQI } = req.body;
-    const sqlUpdate = "UPDATE soil_information a, soil_properties b SET a.Location_name = ?, a.Latitude = ?, a.Longitude = ?, a.Description = ?, b.Bulk_density = ?, b.Particle_density = ?, b.Void_ratio = ?, b.Porosity = ?, b.Moisture_content_mass = ?, b.Moisture_content_volume = ?, b.Water_holding_capacity = ?, b.Clay = ?, b.Silt = ?, b.Sand = ?, b.Soil_pH = ?, b.Total_nitrogen = ?, b.Extractable_phosphorus = ?, b.Exchangeable_potassium = ?, b.Cation_exchange_capacity = ?, b.Organic_matter = ?, b.Earthworm_density = ?, b.SQI = ? WHERE a.S_id = b.S_id AND a.S_id = ?";
-    db.query(sqlUpdate, [Location_name, Latitude, Longitude, Description, Bulk_density, Particle_density, Void_ratio, Porosity, Moisture_content_mass, Moisture_content_volume, Water_holding_capacity, Clay, Silt, Sand, Soil_pH, Total_nitrogen, Extractable_phosphorus, Exchangeable_potassium, Cation_exchange_capacity, Organic_matter, Earthworm_density, SQI, S_id], (error, result) => {
+    const { Location_name, Latitude, Longitude, Location_description, Location_address, Soil_type, Taxonomic_classification, Sample_date, Source, Soil_description, Bulk_density, Particle_density, Void_ratio, Porosity, Moisture_content_mass, Moisture_content_volume, Water_holding_capacity, Clay, Silt, Sand, Soil_pH, Total_nitrogen, Extractable_phosphorus, Exchangeable_potassium, Cation_exchange_capacity, Organic_matter, Earthworm_density, SQI } = req.body;
+    const sqlUpdate = "UPDATE soil_location c, soil_properties b, soil_information a SET c.Location_name = ?, c.Latitude = ?, c.Longitude = ?, c.Location_description = ?, c.Location_address = ?, a.Soil_type = ?, a.Taxonomic_classification = ?, a.Sample_date = ?, a.Source = ?, a.Soil_description = ?, b.Bulk_density = ?, b.Particle_density = ?, b.Void_ratio = ?, b.Porosity = ?, b.Moisture_content_mass = ?, b.Moisture_content_volume = ?, b.Water_holding_capacity = ?, b.Clay = ?, b.Silt = ?, b.Sand = ?, b.Soil_pH = ?, b.Total_nitrogen = ?, b.Extractable_phosphorus = ?, b.Exchangeable_potassium = ?, b.Cation_exchange_capacity = ?, b.Organic_matter = ?, b.Earthworm_density = ?, b.SQI = ? WHERE c.S_id = ? AND a.S_id = c.S_id AND a.S_id = b.S_id AND b.S_id = c.S_id";
+    db.query(sqlUpdate, [Location_name, Latitude, Longitude, Location_description, Location_address, Soil_type, Taxonomic_classification, Sample_date, Source, Soil_description, Bulk_density, Particle_density, Void_ratio, Porosity, Moisture_content_mass, Moisture_content_volume, Water_holding_capacity, Clay, Silt, Sand, Soil_pH, Total_nitrogen, Extractable_phosphorus, Exchangeable_potassium, Cation_exchange_capacity, Organic_matter, Earthworm_density, SQI, S_id], (error, result) => {
         if (error) {
             console.log(error);
         }
@@ -299,7 +291,7 @@ app.put("/api/updatesoil/:S_id", (req, res) => {
 
 app.delete("/api/removeSoil/:S_id", (req, res) => {
     const { S_id } = req.params;
-    const sqlRemove = "DELETE FROM soil_information WHERE S_id = ?";
+    const sqlRemove = "DELETE FROM soil_location WHERE S_id = ?";
     db.query(sqlRemove, S_id, (error, result) => {
         if (error) {
             console.log(error);
@@ -309,7 +301,7 @@ app.delete("/api/removeSoil/:S_id", (req, res) => {
 
 app.delete("/api/removeSoil2/:S_id", (req, res) => {
     const { S_id } = req.params;
-    const sqlRemove = "DELETE FROM soil_properties WHERE S_id = ?";
+    const sqlRemove = "DELETE FROM soil_information WHERE S_id = ?";
     db.query(sqlRemove, S_id, (error, result) => {
         if (error) {
             console.log(error);
@@ -317,15 +309,25 @@ app.delete("/api/removeSoil2/:S_id", (req, res) => {
     });
 });
 
+app.delete("/api/removeSoil3/:S_id", (req, res) => {
+  const { S_id } = req.params;
+  const sqlRemove = "DELETE FROM soil_properties WHERE S_id = ?";
+  db.query(sqlRemove, S_id, (error, result) => {
+      if (error) {
+          console.log(error);
+      }
+  });
+});
+
 app.get("/api/getLocation", (req, res) => {
-    const sqlGet = "SELECT * FROM soil_information a, soil_properties b WHERE a.S_id = b.S_id";
+    const sqlGet = "SELECT * FROM soil_location a, soil_properties b WHERE a.S_id = b.S_id";
     db.query(sqlGet, (error, result) => {
         res.send(result);
     });
 });
 
 app.get("/api/soilCount", (req, res) => {
-    const sqlGet = "SELECT COUNT(*) FROM soil_information";
+    const sqlGet = "SELECT COUNT(*) FROM soil_location";
     db.query(sqlGet, (error, result) => {
         res.send(result);
     });
@@ -364,6 +366,83 @@ app.get("/api/soilCountLow", (req, res) => {
     db.query(sqlGet, (error, result) => {
         res.send(result);
     });
+}); 
+
+app.get("/api/Kidapawan", (req, res) => {
+  const sqlGet = "SELECT COUNT(*) FROM soil_information WHERE Soil_type = 'Kidapawan'";
+  db.query(sqlGet, (error, result) => {
+      res.send(result);
+  });
+}); 
+
+app.get("/api/Adtuyon", (req, res) => {
+  const sqlGet = "SELECT COUNT(*) FROM soil_information WHERE Soil_type = 'Adtuyon'";
+  db.query(sqlGet, (error, result) => {
+      res.send(result);
+  });
+}); 
+
+app.get("/api/Langkong", (req, res) => {
+  const sqlGet = "SELECT COUNT(*) FROM soil_information WHERE Soil_type = 'Langkong'";
+  db.query(sqlGet, (error, result) => {
+      res.send(result);
+  });
+}); 
+
+app.get("/api/Bolinao", (req, res) => {
+  const sqlGet = "SELECT COUNT(*) FROM soil_information WHERE Soil_type = 'Bolinao'";
+  db.query(sqlGet, (error, result) => {
+      res.send(result);
+  });
+}); 
+
+app.get("/api/Kudarangan", (req, res) => {
+  const sqlGet = "SELECT COUNT(*) FROM soil_information WHERE Soil_type = 'Kudarangan'";
+  db.query(sqlGet, (error, result) => {
+      res.send(result);
+  });
+}); 
+
+app.get("/api/LaCastellana", (req, res) => {
+  const sqlGet = "SELECT COUNT(*) FROM soil_information WHERE Soil_type = 'La Castellana'";
+  db.query(sqlGet, (error, result) => {
+      res.send(result);
+  });
+}); 
+
+app.get("/api/Ruguan", (req, res) => {
+  const sqlGet = "SELECT COUNT(*) FROM soil_information WHERE Soil_type = 'Ruguan'";
+  db.query(sqlGet, (error, result) => {
+      res.send(result);
+  });
+}); 
+
+app.get("/api/Binidayan", (req, res) => {
+  const sqlGet = "SELECT COUNT(*) FROM soil_information WHERE Soil_type = 'Binidayan'";
+  db.query(sqlGet, (error, result) => {
+      res.send(result);
+  });
+}); 
+
+app.get("/api/Malabang", (req, res) => {
+  const sqlGet = "SELECT COUNT(*) FROM soil_information WHERE Soil_type = 'Malabang'";
+  db.query(sqlGet, (error, result) => {
+      res.send(result);
+  });
+}); 
+
+app.get("/api/Caromatan", (req, res) => {
+  const sqlGet = "SELECT COUNT(*) FROM soil_information WHERE Soil_type = 'Caromatan'";
+  db.query(sqlGet, (error, result) => {
+      res.send(result);
+  });
+}); 
+
+app.get("/api/Ramain", (req, res) => {
+  const sqlGet = "SELECT COUNT(*) FROM soil_information WHERE Soil_type = 'Kudarangan'";
+  db.query(sqlGet, (error, result) => {
+      res.send(result);
+  });
 }); 
 
 app.listen(5000, () => {

@@ -23,3 +23,12 @@
 .leaflet-control-zoom-out {
     margin-top: 4px;
 }
+
+.leaflet-popup-close-button {
+    background-color: red;
+    /* Custom background color */
+    width: 20px;
+    /* Custom width */
+    height: 20px;
+    /* Custom height */
+}

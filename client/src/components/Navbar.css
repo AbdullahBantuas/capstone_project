@@ -84,7 +84,14 @@ span {
 
 .nav-title {
     margin-left: 10px;
-    font-size: 20px;
+    font-size: 17px;
+    color: rgb(240, 245, 248);
+}
+
+.nav-name {
+    margin-left: auto;
+    margin-right: 80px;
+    font-size: 17px;
     color: rgb(240, 245, 248);
 }
 
