@@ -242,7 +242,7 @@ app.post('/upload', upload.single('file'), (req, res) => {
                   console.log('Inserted row into soil_information table:');
                   const S_id = result1.insertId;
                   
-                  db.query(query2, [S_id, result.Soil_type, result.Taxonomic_classification, result.Sample_date, result.Source, result.Soil_description], (error, result2) => {
+                  db.query(query2, [S_id, result.Soil_type, result.Taxonomic_classification, result.Soil_description, result.Sample_date, result.Source], (error, result2) => {
                     if (error) {
                       console.log(error);
                     } else {
