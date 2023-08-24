@@ -10,7 +10,8 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 
 function SoilData() {
   const [data, setData] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  // const [searchTerm, setSearchTerm] = useState("");
+  const [combinedSearchTerm, setCombinedSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(4);
   const [totalItems, setTotalItems] = useState(0);
@@ -40,13 +41,23 @@ function SoilData() {
     }
   };
 
-  const handleSearch = (event) => {
-    setSearchTerm(event.target.value);
-  };
+  // const handleSearch = (event) => {
+  //   setSearchTerm(event.target.value);
+  // };
+  const handleCombinedSearch = (event) => {
+    setCombinedSearchTerm(event.target.value);
+  };  
 
+  // const filteredData = data.filter((item) => {
+  //   return item.Location_name.toLowerCase().includes(searchTerm.toLowerCase());
+  // });
   const filteredData = data.filter((item) => {
-    return item.Location_name.toLowerCase().includes(searchTerm.toLowerCase());
-  });
+    const combinedMatch = 
+      item.Location_name.toLowerCase().includes(combinedSearchTerm.toLowerCase()) ||
+      item.SQI.toString().includes(combinedSearchTerm);
+  
+    return combinedMatch;
+  });  
 
   const currentData = filteredData.slice(indexOfFirstItem, indexOfLastItem);
 
@@ -55,9 +66,9 @@ function SoilData() {
       <div className="search-container">
         <input
           type="text"
-          placeholder="Search by Location"
-          value={searchTerm}
-          onChange={handleSearch}
+          placeholder="Search location name or SQI"
+          value={combinedSearchTerm}
+          onChange={handleCombinedSearch}
         />
       </div>
       <table className="styled-table">

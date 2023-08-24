@@ -24,7 +24,7 @@ export default function About() {
   return (
     <>
       <RootStyle ref={componentRef} style={{minWidth: "800px"}}>
-        <Link to="/soildata">
+        <Link to="/usergeomap">
             <div className="btn btn-edit">Go Back</div>
         </Link>
         <ReactToPrint
