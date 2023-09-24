@@ -3,10 +3,8 @@ import { toast, ToastContainer } from "react-toastify";
 import { Link } from "react-router-dom";
 import "./UserSoil.css";
 import axios from "axios";
-import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import { GreenIcon, OrangeIcon, RedIcon } from '../../imgs/IconComponents';
 
 function SoilData() {
   const [data, setData] = useState([]);
@@ -82,11 +80,21 @@ function SoilData() {
         </thead>
         <tbody style={{ overflow: "auto", height: "100px" }}>
           {currentData.map((item, index) => {
+
+            let iconComponent;
+            if (item.SQI > 0.8) {
+              iconComponent = <GreenIcon />;
+            } else if (item.SQI >= 0.5 && item.SQI <= 0.8) {
+              iconComponent = <OrangeIcon />;
+            } else {
+              iconComponent = <RedIcon />;
+            }
+
             return (
               <tr key={item.S_id}>
                 <th scope="row">{indexOfFirstItem + index + 1}</th>
                 <td>{item.Location_name}</td>
-                <td>{item.SQI}</td>
+                <td>{iconComponent} {item.SQI}</td>
                 <td>
                     <Link to={`/viewSoil4/${item.S_id}`}>
                       <button className="btn btn-view" title="View soil"><VisibilityIcon/></button>

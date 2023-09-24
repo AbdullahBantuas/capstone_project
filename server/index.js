@@ -6,18 +6,18 @@ const cors = require("cors");
 const csv = require('csv-parser');
 const multer = require('multer');
 const fs = require('fs');
-const crypto = require("crypto");   
+const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 
 const storage = multer.diskStorage({
     destination: (req, file, callback) => {
-      callback(null, './uploads');
+        callback(null, './uploads');
     },
     filename: (req, file, callback) => {
-      callback(null, file.originalname);
+        callback(null, file.originalname);
     },
-  });
-  
+});
+
 const upload = multer({ storage: storage });
 
 const db = mysql.createPool({
@@ -32,32 +32,32 @@ const transporter = nodemailer.createTransport({
     port: 587,
     secure: false, // Use SSL/TLS if true
     auth: {
-      user: "skullpuncher1011@gmail.com",
-      pass: "pxoxqeredxyhwadt",
+        user: "skullpuncher1011@gmail.com",
+        pass: "pxoxqeredxyhwadt",
     },
-  });
+});
 
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 function sendVerificationEmail(toEmail, verificationToken) {
-  // Compose the email message
-  const mailOptions = {
-    from: "skullpuncher1011@gmail.com",
-    to: toEmail,
-    subject: "Account Verification",
-    text: `Please click the following link to verify your account: http://localhost:5000/verify/${verificationToken}`,
-  };
+    // Compose the email message
+    const mailOptions = {
+        from: "skullpuncher1011@gmail.com",
+        to: toEmail,
+        subject: "Account Verification",
+        text: `Please click the following link to verify your account: http://localhost:5000/verify/${verificationToken}`,
+    };
 
-  // Send the email
-transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log("Error sending verification email:", error);
-    } else {
-      console.log("Verification email sent:", info.response);
-    }
-  });
+    // Send the email
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.log("Error sending verification email:", error);
+        } else {
+            console.log("Verification email sent:", info.response);
+        }
+    });
 }
 
 app.get("/api/get", (req, res) => {
@@ -71,68 +71,67 @@ app.post("/api/login", (req, res) => {
     const { Username, Password } = req.body;
     const sqlQuery = "SELECT * FROM user WHERE Username = ? AND Password = ?";
     db.query(sqlQuery, [Username, Password], (err, result) => {
-      if (err) {
-        return res.json({ Message: "Error inside server" });
-      }
-      if (result.length > 0) {
-        const user = result[0];
-        if (user.IsVerified === 1) { // Check if account is verified (IsVerified = 1)
-          return res.json({
-            Login: true,
-            Status: user.Status,
-            U_id: user.U_id,
-            IsVerified: user.IsVerified
-          });
-        } else {
-          return res.json({
-            Login: false,
-            Message: "Your account has not been verified. Please check your email for the verification link."
-          });
+        if (err) {
+            return res.json({ Message: "Error inside server" });
         }
-      } else {
-        return res.json({ Login: false });
-      }
+        if (result.length > 0) {
+            const user = result[0];
+            if (user.IsVerified === 1) { // Check if account is verified (IsVerified = 1)
+                return res.json({
+                    Login: true,
+                    Status: user.Status,
+                    U_id: user.U_id,
+                    IsVerified: user.IsVerified
+                });
+            } else {
+                return res.json({
+                    Login: false,
+                    Message: "Your account has not been verified. Please check your email for the verification link."
+                });
+            }
+        } else {
+            return res.json({ Login: false });
+        }
     });
-  });  
+});
 
 app.post("/api/post", (req, res) => {
-  const { Username, Password, Fullname, Email } = req.body;
-  const verificationToken = crypto.randomBytes(20).toString("hex");
-  const sqlInsert =
-    "INSERT INTO user (Username, Password, Fullname, Email, Status, VerificationToken) VALUES (?, ?, ?, ?, 'user', ?)";
-  db.query(
-    sqlInsert,
-    [Username, Password, Fullname, Email, verificationToken],
-    (error, result) => {
-      if (error) {
-        console.log(error);
-        res.sendStatus(500);
-      } else {
-        sendVerificationEmail(Email, verificationToken);
-        res.sendStatus(200);
-      }
-    }
-  );
+    const { Username, Password, Fullname, Email } = req.body;
+    const verificationToken = crypto.randomBytes(20).toString("hex");
+    const sqlInsert =
+        "INSERT INTO user (Username, Password, Fullname, Email, Status, VerificationToken) VALUES (?, ?, ?, ?, 'user', ?)";
+    db.query(
+        sqlInsert, [Username, Password, Fullname, Email, verificationToken],
+        (error, result) => {
+            if (error) {
+                console.log(error);
+                res.sendStatus(500);
+            } else {
+                sendVerificationEmail(Email, verificationToken);
+                res.sendStatus(200);
+            }
+        }
+    );
 });
 
 app.get("/verify/:token", (req, res) => {
     const verificationToken = req.params.token;
     const sqlUpdate = "UPDATE user SET IsVerified = '1' WHERE VerificationToken = ?";
     db.query(sqlUpdate, [verificationToken], (error, result) => {
-      if (error) {
-        console.log(error);
-        res.sendStatus(500);
-      } else {
-        if (result.changedRows === 1) {
-          // Verification successful
-          res.send("Your account has been successfully verified. You can now log in.");
+        if (error) {
+            console.log(error);
+            res.sendStatus(500);
         } else {
-          // Invalid verification token
-          res.send("Invalid verification token.");
+            if (result.changedRows === 1) {
+                // Verification successful
+                res.send("Your account has been successfully verified. You can now log in.");
+            } else {
+                // Invalid verification token
+                res.send("Invalid verification token.");
+            }
         }
-      }
     });
-  });
+});
 
 app.delete("/api/remove/:U_id", (req, res) => {
     const { U_id } = req.params;
@@ -186,86 +185,94 @@ app.get("/api/soil", (req, res) => {
     });
 });
 
+app.get("/api/soil2/:Soil_type", (req, res) => {
+    const { Soil_type } = req.params;
+    const sqlGet = "SELECT * FROM soil_information a, soil_properties b, soil_location c WHERE a.S_id = b.S_id AND a.S_id = c.S_id AND b.S_id = c.S_id AND Soil_type = ?";
+    db.query(sqlGet, [Soil_type], (error, result) => {
+        res.send(result);
+    });
+});
+
 app.post("/api/addsoil", (req, res) => {
     const { Location_name, Latitude, Longitude, Location_description, Location_address, Soil_type, Taxonomic_classification, Sample_date, Source, Soil_description, Bulk_density, Particle_density, Void_ratio, Porosity, Moisture_content_mass, Moisture_content_volume, Water_holding_capacity, Clay, Silt, Sand, Soil_pH, Total_nitrogen, Extractable_phosphorus, Exchangeable_potassium, Cation_exchange_capacity, Organic_matter, Earthworm_density, SQI } = req.body;
-  
+
     const sqlInsertSoilLoc = "INSERT INTO soil_location (Location_name, Latitude, Longitude, Location_description, Location_address) VALUES (?, ?, ?, ?, ?)";
     db.query(sqlInsertSoilLoc, [Location_name, Latitude, Longitude, Location_description, Location_address], (error, result) => {
-      if (error) {
-        console.log(error);
-        res.sendStatus(500);
-      } else {
-        const S_id = result.insertId;
-        const sqlInsertSoilInfo = "INSERT INTO soil_information (S_id, Soil_type, Taxonomic_classification, Soil_description, Sample_date, Source) VALUES (?, ?, ?, ?, ?, ?)";
-        db.query(sqlInsertSoilInfo, [S_id, Soil_type, Taxonomic_classification, Soil_description, Sample_date, Source], (error, result) => {
-          if (error) {
+        if (error) {
             console.log(error);
             res.sendStatus(500);
         } else {
-          const S_id = result.insertId;
-          const sqlInsertSoilProps = "INSERT INTO soil_properties (S_id, Bulk_density, Particle_density, Void_ratio, Porosity, Moisture_content_mass, Moisture_content_volume, Water_holding_capacity, Clay, Silt, Sand, Soil_pH, Total_nitrogen, Extractable_phosphorus, Exchangeable_potassium, Cation_exchange_capacity, Organic_matter, Earthworm_density, SQI) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-          db.query(sqlInsertSoilProps, [S_id, Bulk_density, Particle_density, Void_ratio, Porosity, Moisture_content_mass, Moisture_content_volume, Water_holding_capacity, Clay, Silt, Sand, Soil_pH, Total_nitrogen, Extractable_phosphorus, Exchangeable_potassium, Cation_exchange_capacity, Organic_matter, Earthworm_density, SQI], (error, result) => {
-          if (error) {
-            console.log(error);
-            res.sendStatus(500);
-          } else {
-            res.sendStatus(200);
-          }
-        });
-      }
+            const S_id = result.insertId;
+            const sqlInsertSoilInfo = "INSERT INTO soil_information (S_id, Soil_type, Taxonomic_classification, Soil_description, Sample_date, Source) VALUES (?, ?, ?, ?, ?, ?)";
+            db.query(sqlInsertSoilInfo, [S_id, Soil_type, Taxonomic_classification, Soil_description, Sample_date, Source], (error, result) => {
+                if (error) {
+                    console.log(error);
+                    res.sendStatus(500);
+                } else {
+                    const S_id = result.insertId;
+                    const sqlInsertSoilProps = "INSERT INTO soil_properties (S_id, Bulk_density, Particle_density, Void_ratio, Porosity, Moisture_content_mass, Moisture_content_volume, Water_holding_capacity, Clay, Silt, Sand, Soil_pH, Total_nitrogen, Extractable_phosphorus, Exchangeable_potassium, Cation_exchange_capacity, Organic_matter, Earthworm_density, SQI) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    db.query(sqlInsertSoilProps, [S_id, Bulk_density, Particle_density, Void_ratio, Porosity, Moisture_content_mass, Moisture_content_volume, Water_holding_capacity, Clay, Silt, Sand, Soil_pH, Total_nitrogen, Extractable_phosphorus, Exchangeable_potassium, Cation_exchange_capacity, Organic_matter, Earthworm_density, SQI], (error, result) => {
+                        if (error) {
+                            console.log(error);
+                            res.sendStatus(500);
+                        } else {
+                            res.sendStatus(200);
+                        }
+                    });
+                }
+            });
+        }
     });
-  }
-  });
-});  
+});
 app.post('/upload', upload.single('file'), (req, res) => {
     const filePath = req.file.path;
     const results = [];
-  
-    fs.createReadStream(filePath)
-      .pipe(csv({ mapHeaders: ({ header }) => header.trim() }))
-      .on('data', (data) => {
-        if (data.Location_name) {
-          data.Location_name = data.Location_name.replace(/^"(.+(?="$))"$/, '$1');
-        }
-        results.push(data);
-      })
-      .on('end', () => {
-        const query1 = 'INSERT INTO soil_location (Location_name, Latitude, Longitude, Location_description, Location_address) VALUES (?, ?, ?, ?, ?)';
-        const query2 = 'INSERT INTO soil_information (S_id, Soil_type, Taxonomic_classification, Soil_description, Sample_date, Source) VALUES (?, ?, ?, ?, ?, ?)';
-        const query3 = 'INSERT INTO soil_properties (S_id, Bulk_density, Particle_density, Void_ratio, Porosity, Moisture_content_mass, Moisture_content_volume, Water_holding_capacity, Clay, Silt, Sand, Soil_pH, Total_nitrogen, Extractable_phosphorus, Exchangeable_potassium, Cation_exchange_capacity, Organic_matter, Earthworm_density, SQI) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-  
-        results.forEach((result) => {
-            db.query(query1, [result.Location_name, result.Latitude, result.Longitude, result.Location_address, result.Location_description], (error, result1) => {
-                if (error) {
-                  console.log(error);
-                } else {
-                  console.log('Inserted row into soil_information table:');
-                  const S_id = result1.insertId;
-                  
-                  db.query(query2, [S_id, result.Soil_type, result.Taxonomic_classification, result.Soil_description, result.Sample_date, result.Source], (error, result2) => {
-                    if (error) {
-                      console.log(error);
-                    } else {
-                      console.log('Inserted row into soil_properties table:');
-                      const S_id = result2.insertId;
 
-                      db.query(query3, [S_id, result.Bulk_density, result.Particle_density, result.Void_ratio, result.Porosity, result.Moisture_content_mass, result.Moisture_content_volume, result.Water_holding_capacity, result.Clay, result.Silt, result.Sand, result.Soil_pH, result.Total_nitrogen, result.Extractable_phosphorus, result.Exchangeable_potassium, result.Cation_exchange_capacity, result.Organic_matter, result.Earthworm_density, result.SQI], (error, result3) => {
-                        if (error) {
-                          console.log(error);
-                        } else {
-                          console.log('Inserted row into soil_properties table:');
-                        }
-                      });
+    fs.createReadStream(filePath)
+        .pipe(csv({ mapHeaders: ({ header }) => header.trim() }))
+        .on('data', (data) => {
+            if (data.Location_name) {
+                data.Location_name = data.Location_name.replace(/^"(.+(?="$))"$/, '$1');
+            }
+            results.push(data);
+        })
+        .on('end', () => {
+            const query1 = 'INSERT INTO soil_location (Location_name, Latitude, Longitude, Location_description, Location_address) VALUES (?, ?, ?, ?, ?)';
+            const query2 = 'INSERT INTO soil_information (S_id, Soil_type, Taxonomic_classification, Soil_description, Sample_date, Source) VALUES (?, ?, ?, ?, ?, ?)';
+            const query3 = 'INSERT INTO soil_properties (S_id, Bulk_density, Particle_density, Void_ratio, Porosity, Moisture_content_mass, Moisture_content_volume, Water_holding_capacity, Clay, Silt, Sand, Soil_pH, Total_nitrogen, Extractable_phosphorus, Exchangeable_potassium, Cation_exchange_capacity, Organic_matter, Earthworm_density, SQI) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+
+            results.forEach((result) => {
+                db.query(query1, [result.Location_name, result.Latitude, result.Longitude, result.Location_address, result.Location_description], (error, result1) => {
+                    if (error) {
+                        console.log(error);
+                    } else {
+                        console.log('Inserted row into soil_information table:');
+                        const S_id = result1.insertId;
+
+                        db.query(query2, [S_id, result.Soil_type, result.Taxonomic_classification, result.Soil_description, result.Sample_date, result.Source], (error, result2) => {
+                            if (error) {
+                                console.log(error);
+                            } else {
+                                console.log('Inserted row into soil_properties table:');
+                                const S_id = result2.insertId;
+
+                                db.query(query3, [S_id, result.Bulk_density, result.Particle_density, result.Void_ratio, result.Porosity, result.Moisture_content_mass, result.Moisture_content_volume, result.Water_holding_capacity, result.Clay, result.Silt, result.Sand, result.Soil_pH, result.Total_nitrogen, result.Extractable_phosphorus, result.Exchangeable_potassium, result.Cation_exchange_capacity, result.Organic_matter, result.Earthworm_density, result.SQI], (error, result3) => {
+                                    if (error) {
+                                        console.log(error);
+                                    } else {
+                                        console.log('Inserted row into soil_properties table:');
+                                    }
+                                });
+                            }
+                        });
                     }
-                  });
-                }
-              });
+                });
+            });
+
+            res.send('Import successful');
         });
-  
-        res.send('Import successful');
-      });
-  });  
-  
+});
+
 app.get("/api/soil/:S_id", (req, res) => {
     const { S_id } = req.params;
     const sqlGet = "SELECT * FROM soil_location c, soil_properties b,  soil_information a WHERE a.S_id = ? AND a.S_id = b.S_id AND a.S_id = c.S_id AND b.S_id = c.S_id";
@@ -310,13 +317,13 @@ app.delete("/api/removeSoil2/:S_id", (req, res) => {
 });
 
 app.delete("/api/removeSoil3/:S_id", (req, res) => {
-  const { S_id } = req.params;
-  const sqlRemove = "DELETE FROM soil_properties WHERE S_id = ?";
-  db.query(sqlRemove, S_id, (error, result) => {
-      if (error) {
-          console.log(error);
-      }
-  });
+    const { S_id } = req.params;
+    const sqlRemove = "DELETE FROM soil_properties WHERE S_id = ?";
+    db.query(sqlRemove, S_id, (error, result) => {
+        if (error) {
+            console.log(error);
+        }
+    });
 });
 
 app.get("/api/getLocation", (req, res) => {
@@ -366,84 +373,35 @@ app.get("/api/soilCountLow", (req, res) => {
     db.query(sqlGet, (error, result) => {
         res.send(result);
     });
-}); 
+});
 
-app.get("/api/Kidapawan", (req, res) => {
-  const sqlGet = "SELECT COUNT(*) FROM soil_information WHERE Soil_type = 'Kidapawan'";
-  db.query(sqlGet, (error, result) => {
-      res.send(result);
-  });
-}); 
+app.get("/api/soiltype/:soil_key/count", (req, res) => {
+    const { soil_key } = req.params;
+    const sqlGet = `SELECT COUNT(*) FROM soil_information WHERE Soil_type = '${soil_key}'`;
+    db.query(sqlGet, (error, result) => {
+        res.send(result);
+    });
+});
+app.get("/api/soiltype/name", (req, res) => {
+    const { soil_key } = req.params;
+    const sqlGet = `SELECT DISTINCT Soil_type FROM soil_information`;
+    db.query(sqlGet, (error, result) => {
+        res.send(result);
+    });
+});
 
-app.get("/api/Adtuyon", (req, res) => {
-  const sqlGet = "SELECT COUNT(*) FROM soil_information WHERE Soil_type = 'Adtuyon'";
-  db.query(sqlGet, (error, result) => {
-      res.send(result);
-  });
-}); 
-
-app.get("/api/Langkong", (req, res) => {
-  const sqlGet = "SELECT COUNT(*) FROM soil_information WHERE Soil_type = 'Langkong'";
-  db.query(sqlGet, (error, result) => {
-      res.send(result);
-  });
-}); 
-
-app.get("/api/Bolinao", (req, res) => {
-  const sqlGet = "SELECT COUNT(*) FROM soil_information WHERE Soil_type = 'Bolinao'";
-  db.query(sqlGet, (error, result) => {
-      res.send(result);
-  });
-}); 
-
-app.get("/api/Kudarangan", (req, res) => {
-  const sqlGet = "SELECT COUNT(*) FROM soil_information WHERE Soil_type = 'Kudarangan'";
-  db.query(sqlGet, (error, result) => {
-      res.send(result);
-  });
-}); 
-
-app.get("/api/LaCastellana", (req, res) => {
-  const sqlGet = "SELECT COUNT(*) FROM soil_information WHERE Soil_type = 'La Castellana'";
-  db.query(sqlGet, (error, result) => {
-      res.send(result);
-  });
-}); 
-
-app.get("/api/Ruguan", (req, res) => {
-  const sqlGet = "SELECT COUNT(*) FROM soil_information WHERE Soil_type = 'Ruguan'";
-  db.query(sqlGet, (error, result) => {
-      res.send(result);
-  });
-}); 
-
-app.get("/api/Binidayan", (req, res) => {
-  const sqlGet = "SELECT COUNT(*) FROM soil_information WHERE Soil_type = 'Binidayan'";
-  db.query(sqlGet, (error, result) => {
-      res.send(result);
-  });
-}); 
-
-app.get("/api/Malabang", (req, res) => {
-  const sqlGet = "SELECT COUNT(*) FROM soil_information WHERE Soil_type = 'Malabang'";
-  db.query(sqlGet, (error, result) => {
-      res.send(result);
-  });
-}); 
-
-app.get("/api/Caromatan", (req, res) => {
-  const sqlGet = "SELECT COUNT(*) FROM soil_information WHERE Soil_type = 'Caromatan'";
-  db.query(sqlGet, (error, result) => {
-      res.send(result);
-  });
-}); 
-
-app.get("/api/Ramain", (req, res) => {
-  const sqlGet = "SELECT COUNT(*) FROM soil_information WHERE Soil_type = 'Kudarangan'";
-  db.query(sqlGet, (error, result) => {
-      res.send(result);
-  });
-}); 
+app.get("/api/soiltypequality/:soil_key/:quality", (req, res) => {
+    const { soil_key, quality } = req.params;
+    const sqlGet = `SELECT COUNT(*) FROM soil_information a, soil_properties b 
+    WHERE a.S_id = b.S_id 
+    AND a.Soil_type = '${soil_key}' AND ${
+    quality == 'med' ? "b.SQI <= '0.8' AND b.SQI >= '0.5'" : 
+      quality == 'low' ? "b.SQI < '0.5'": "b.SQI > '0.8'"
+  }`;
+    db.query(sqlGet, (error, result) => {
+        res.send(result || [{ "COUNT(*)": 0 }]);
+    });
+});
 
 app.listen(5000, () => {
     console.log("Server is running on port 5000");

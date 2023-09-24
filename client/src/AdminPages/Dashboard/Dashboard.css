@@ -38,7 +38,79 @@
     margin-top: 20px;
 }
 
+.chart-select {
+    margin-left: 550px;
+    margin-top: 200px;
+}
+
 .chart-container {
+    margin-top: 5px;
     width: 600px;
     height: 400px;
+    justify-content: center;
+}
+
+.select-chart {
+    cursor: pointer;
+    background-color: rgb(232, 233, 234);
+}
+
+.select-chart:hover {
+    background-color: rgb(152, 153, 156);
+}
+
+.location-table {
+    border-collapse: collapse;
+    margin: -20px auto;
+    font-size: 0.9em;
+    font-family: sans-serif;
+    min-width: 100%;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.location-table thead tr {
+    background-color: #108f50;
+    color: #ffffff;
+    text-align: center;
+}
+
+.location-table th,
+.location-table td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.location-table tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.location-table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.location-table tbody tr:last-of-type {
+    border-bottom: 2px solid #009879;
+}
+
+.select-soil-type {
+    border: none;
+    background-color: #f3f3f3;
+    padding: 5px 8px;
+    text-align: center;
+    display: center;
+    border-radius: 5px;
+    font-size: 15px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+.h444 {
+    text-align: center;
+}
+
+.pure-table {
+    margin-top: -20px;
+    width: 100%;
 }
